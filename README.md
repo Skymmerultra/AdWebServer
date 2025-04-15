@@ -1,2 +1,2 @@
 # AdWebServer
-This is a 
+This is a web-based Internet advertising platform
