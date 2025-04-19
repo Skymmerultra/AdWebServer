@@ -14,7 +14,7 @@ public enum ResultCodeEnum {
     REPEAT_SUBMIT(206, "重复提交"),
     DELETE_ERROR(207, "请先删除子集"),
 
-    ADMIN_ACCOUNT_EXIST_ERROR(301, "账号已存在"),
+    /*已修改*/USER_ACCOUNT_EXIST_ERROR(301, "账号已存在"),
     ADMIN_CAPTCHA_CODE_ERROR(302, "验证码错误"),
     ADMIN_CAPTCHA_CODE_EXPIRED(303, "验证码已过期"),
     ADMIN_CAPTCHA_CODE_NOT_FOUND(304, "未输入验证码"),
@@ -22,8 +22,8 @@ public enum ResultCodeEnum {
     ADMIN_APARTMENT_DELETE_ERROR(310,"请先删除房间"),
 
     ADMIN_LOGIN_AUTH(305, "未登陆"),
-    ADMIN_ACCOUNT_NOT_EXIST_ERROR(306, "账号不存在"),
-    ADMIN_ACCOUNT_ERROR(307, "用户名或密码错误"),
+    /*已修改*/USER_ACCOUNT_NOT_EXIST_ERROR(306, "账号不存在"),
+    /*已修改*/USER_ACCOUNT_PASSWORD_ERROR(307, "密码错误"),
     ADMIN_ACCOUNT_DISABLED_ERROR(308, "该用户已被禁用"),
     ADMIN_ACCESS_FORBIDDEN(309, "无访问权限"),
 

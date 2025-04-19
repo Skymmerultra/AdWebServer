@@ -32,4 +32,10 @@ public class Knife4jConfig {
                 pathsToMatch("/product/**").
                 build();
     }
+    @Bean
+    public GroupedOpenApi adAPI() {
+        return GroupedOpenApi.builder().group("广告信息管理").
+                pathsToMatch("/ad/**").
+                build();
+    }
 }
