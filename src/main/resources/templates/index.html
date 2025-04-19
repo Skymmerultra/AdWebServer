@@ -2,12 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>userInfo</title>
+    <title>首页</title>
 </head>
 <body>
-<h1>
-    欢迎
-    <span th:text="${user.getUsername()}"></span>
-</h1>
+<h1>首页</h1>
+<a th:href="@{/user/login}">登录</a><br>
+<a th:href="@{/user/regitry}">注册</a><br>
 </body>
 </html>
