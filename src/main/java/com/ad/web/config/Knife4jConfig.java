@@ -38,4 +38,10 @@ public class Knife4jConfig {
                 pathsToMatch("/ad/**").
                 build();
     }
+    @Bean
+    public GroupedOpenApi graphAPI() {
+        return GroupedOpenApi.builder().group("图片信息管理").
+                pathsToMatch("/graph/**").
+                build();
+    }
 }

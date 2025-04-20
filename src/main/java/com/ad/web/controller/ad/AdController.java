@@ -1,4 +1,4 @@
-package com.ad.web.controller.Ad;
+package com.ad.web.controller.ad;
 
 import com.ad.web.common.result.Result;
 import com.ad.web.entity.Ad;
@@ -23,8 +23,8 @@ public class AdController {
 
     @Operation(description = "根据浏览次数排序查询所用广告信息")
     @GetMapping("/getAdAll")
-    public Result<List<Ad>> getAdListAll(){
-        List<Ad> result = adService.getAdListAll();
+    public Result<List<Ad>> getAdAndGraphList(){
+        List<Ad> result = adService.getAdAndGraphList();
         return Result.ok(result);
     }
 

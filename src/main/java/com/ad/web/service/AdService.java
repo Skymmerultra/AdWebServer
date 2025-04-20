@@ -5,7 +5,7 @@ import com.ad.web.entity.Ad;
 import java.util.List;
 
 public interface AdService {
-    List<Ad> getAdListAll();
+    List<Ad> getAdAndGraphList();
 
     List<Ad> searchAdList(String searchInfo);
 }

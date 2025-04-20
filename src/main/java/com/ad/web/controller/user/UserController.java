@@ -1,14 +1,13 @@
-package com.ad.web.controller.User;
+package com.ad.web.controller.user;
 
 import com.ad.web.common.result.Result;
-import com.ad.web.entity.vo.LoginVo;
+import com.ad.web.entity.vo.user.LoginVo;
 import com.ad.web.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,9 +26,9 @@ public class UserController {
     }
 
     @Operation(description = "用户登录")
-    @PostMapping("/login")
-    public Result login(String username,String password){
-        userService.login(username,password);
+    @PostMapping("/login1")
+    public Result login1(LoginVo loginVo){
+        userService.login1(loginVo);
         return Result.ok();
     }
 }

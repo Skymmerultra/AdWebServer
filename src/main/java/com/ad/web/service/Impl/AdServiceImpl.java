@@ -15,7 +15,7 @@ public class AdServiceImpl implements AdService {
     private AdMapper adMapper;
 
     @Override
-    public List<Ad> getAdListAll() {
+    public List<Ad> getAdAndGraphList() {
         return adMapper.list();
     }
 

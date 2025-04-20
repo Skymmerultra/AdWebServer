@@ -2,6 +2,7 @@ package com.ad.web.service.Impl;
 
 import com.ad.web.common.result.ResultCodeEnum;
 import com.ad.web.entity.User;
+import com.ad.web.entity.vo.user.LoginVo;
 import com.ad.web.exception.AdWebException;
 import com.ad.web.mapper.UserMapper;
 import com.ad.web.service.UserService;
@@ -31,12 +32,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void login(String username, String password) {
-        User userResult = userMapper.getUserByName(username);
+    public void login1(LoginVo loginVo) {
+        User userResult = userMapper.getUserByName(loginVo.getUsername());
         if (userResult == null){
             throw new AdWebException(ResultCodeEnum.USER_ACCOUNT_NOT_EXIST_ERROR);
         }
-        if (!DigestUtils.md5Hex(password).equals(userResult.getPassword())){
+        if (!DigestUtils.md5Hex(loginVo.getPassword()).equals(userResult.getPassword())){
             throw new AdWebException(ResultCodeEnum.USER_ACCOUNT_PASSWORD_ERROR);
         }
     }

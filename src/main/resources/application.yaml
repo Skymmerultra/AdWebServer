@@ -1,4 +1,8 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   application:
     name: AdWeb
   datasource:
@@ -12,3 +16,13 @@ mybatis:
   mapper-locations: classpath:/mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
+
+minio:
+  endpoint: http://192.168.116.101:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket-name: hello-minio
+
+
+
+
