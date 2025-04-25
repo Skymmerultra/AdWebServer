@@ -1,14 +1,16 @@
 package com.ad.web.entity;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 /**
- * 用户充值表
- * @TableName user_recharge
+ * 用户订单表
+ * @TableName user_order
  */
 @Data
-public class UserRecharge {
+public class UserOrder {
     /**
      * 
      */
@@ -20,33 +22,56 @@ public class UserRecharge {
     private Long userId;
 
     /**
-     * 充值时间
+     * 广告位id
+     */
+    private Long adPoId;
+
+    /**
+     * 购买时间
      */
     private Date time;
 
     /**
-     * 充值金额
+     * 是否开发票
      */
-    private Integer balance;
+    private Integer isInvoice;
 
     /**
-     * 支付类型id
+     * 投递次数
      */
-    private Long paymentTypeId;
+    private Integer deliveryNum;
+
+    /**
+     * 开始时间
+     */
+    private Date startTime;
 
     /**
      * 创建时间
      */
+    private Date endTime;
+
+    /**
+     * 投递内容
+     */
+    private String content;
+
+    /**
+     * 创建时间
+     */
+    @JsonIgnore
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @JsonIgnore
     private Date updateTime;
 
     /**
      * 是否删除
      */
+    @JsonIgnore
     private Integer isDeleted;
 
     @Override
@@ -60,12 +85,16 @@ public class UserRecharge {
         if (getClass() != that.getClass()) {
             return false;
         }
-        UserRecharge other = (UserRecharge) that;
+        UserOrder other = (UserOrder) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
+            && (this.getAdPoId() == null ? other.getAdPoId() == null : this.getAdPoId().equals(other.getAdPoId()))
             && (this.getTime() == null ? other.getTime() == null : this.getTime().equals(other.getTime()))
-            && (this.getBalance() == null ? other.getBalance() == null : this.getBalance().equals(other.getBalance()))
-            && (this.getPaymentTypeId() == null ? other.getPaymentTypeId() == null : this.getPaymentTypeId().equals(other.getPaymentTypeId()))
+            && (this.getIsInvoice() == null ? other.getIsInvoice() == null : this.getIsInvoice().equals(other.getIsInvoice()))
+            && (this.getDeliveryNum() == null ? other.getDeliveryNum() == null : this.getDeliveryNum().equals(other.getDeliveryNum()))
+            && (this.getStartTime() == null ? other.getStartTime() == null : this.getStartTime().equals(other.getStartTime()))
+            && (this.getEndTime() == null ? other.getEndTime() == null : this.getEndTime().equals(other.getEndTime()))
+            && (this.getContent() == null ? other.getContent() == null : this.getContent().equals(other.getContent()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
             && (this.getIsDeleted() == null ? other.getIsDeleted() == null : this.getIsDeleted().equals(other.getIsDeleted()));
@@ -77,9 +106,13 @@ public class UserRecharge {
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getUserId() == null) ? 0 : getUserId().hashCode());
+        result = prime * result + ((getAdPoId() == null) ? 0 : getAdPoId().hashCode());
         result = prime * result + ((getTime() == null) ? 0 : getTime().hashCode());
-        result = prime * result + ((getBalance() == null) ? 0 : getBalance().hashCode());
-        result = prime * result + ((getPaymentTypeId() == null) ? 0 : getPaymentTypeId().hashCode());
+        result = prime * result + ((getIsInvoice() == null) ? 0 : getIsInvoice().hashCode());
+        result = prime * result + ((getDeliveryNum() == null) ? 0 : getDeliveryNum().hashCode());
+        result = prime * result + ((getStartTime() == null) ? 0 : getStartTime().hashCode());
+        result = prime * result + ((getEndTime() == null) ? 0 : getEndTime().hashCode());
+        result = prime * result + ((getContent() == null) ? 0 : getContent().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         result = prime * result + ((getIsDeleted() == null) ? 0 : getIsDeleted().hashCode());
@@ -94,9 +127,13 @@ public class UserRecharge {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
+        sb.append(", adPoId=").append(adPoId);
         sb.append(", time=").append(time);
-        sb.append(", balance=").append(balance);
-        sb.append(", paymentTypeId=").append(paymentTypeId);
+        sb.append(", isInvoice=").append(isInvoice);
+        sb.append(", deliveryNum=").append(deliveryNum);
+        sb.append(", startTime=").append(startTime);
+        sb.append(", endTime=").append(endTime);
+        sb.append(", content=").append(content);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", isDeleted=").append(isDeleted);

@@ -1,6 +1,8 @@
 package com.ad.web.entity;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 /**
@@ -37,16 +39,19 @@ public class Graph {
     /**
      * 创建时间
      */
+    @JsonIgnore
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @JsonIgnore
     private Date updateTime;
 
     /**
      * 是否删除
      */
+    @JsonIgnore
     private Integer isDeleted;
 
     @Override

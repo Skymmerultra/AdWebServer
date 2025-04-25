@@ -49,8 +49,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="Graph" />
-                  <option name="tableName" value="graph_info" />
+                  <option name="className" value="UserOrder" />
+                  <option name="tableName" value="user_order" />
                 </TableUIInfo>
               </list>
             </option>

@@ -5,7 +5,7 @@ import com.ad.web.entity.User;
 /**
 * @author 朱炫宇
 * @description 针对表【user_info(用户信息表)】的数据库操作Mapper
-* @createDate 2025-04-19 15:19:47
+* @createDate 2025-04-25 21:11:00
 * @Entity com.ad.web.entity.User
 */
 public interface UserMapper {
@@ -23,4 +23,6 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     User getUserByName(String username);
+
+    Integer getBalanceById(Long userId);
 }

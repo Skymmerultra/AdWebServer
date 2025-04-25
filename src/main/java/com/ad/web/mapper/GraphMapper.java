@@ -1,6 +1,10 @@
 package com.ad.web.mapper;
 
+import com.ad.web.common.Enum.GraphType;
 import com.ad.web.entity.Graph;
+
+import java.util.Date;
+import java.util.List;
 
 /**
 * @author 朱炫宇
@@ -22,5 +26,5 @@ public interface GraphMapper {
 
     int updateByPrimaryKey(Graph record);
 
-    Graph getGraphByTypeAndId(Integer itemType, Long itemId);
+    List<Graph> getGraphListByTypeAndId(Integer itemType, Long itemId);
 }

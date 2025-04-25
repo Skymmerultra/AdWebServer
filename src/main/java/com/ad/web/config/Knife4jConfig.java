@@ -25,23 +25,22 @@ public class Knife4jConfig {
                 pathsToMatch("/user/**").
                 build();
     }
-
-    @Bean
-    public GroupedOpenApi systemAPI() {
-        return GroupedOpenApi.builder().group("产品信息管理").
-                pathsToMatch("/product/**").
-                build();
-    }
-    @Bean
-    public GroupedOpenApi adAPI() {
-        return GroupedOpenApi.builder().group("广告信息管理").
-                pathsToMatch("/ad/**").
-                build();
-    }
     @Bean
     public GroupedOpenApi graphAPI() {
         return GroupedOpenApi.builder().group("图片信息管理").
                 pathsToMatch("/graph/**").
+                build();
+    }
+    @Bean
+    public GroupedOpenApi adpoAPI() {
+        return GroupedOpenApi.builder().group("广告位信息管理").
+                pathsToMatch("/adpo/**").
+                build();
+    }
+    @Bean
+    public GroupedOpenApi orderAPI() {
+        return GroupedOpenApi.builder().group("订单信息管理").
+                pathsToMatch("/order/**").
                 build();
     }
 }

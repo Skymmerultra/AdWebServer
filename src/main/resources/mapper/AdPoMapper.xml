@@ -2,57 +2,61 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ad.web.mapper.AdMapper">
+<mapper namespace="com.ad.web.mapper.AdPoMapper">
 
-    <resultMap id="BaseResultMap" type="com.ad.web.entity.Ad">
+    <resultMap id="BaseResultMap" type="com.ad.web.entity.AdPo">
             <id property="id" column="id" />
             <result property="name" column="name" />
+            <result property="content" column="content" />
             <result property="price" column="price" />
-            <result property="viewCount" column="view_count" />
-            <result property="introduction" column="introduction" />
+            <result property="clickNum" column="click_num" />
             <result property="createTime" column="create_time" />
             <result property="updateTime" column="update_time" />
             <result property="isDeleted" column="is_deleted" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,price,view_count,introduction,create_time,
+        id,name,content,price,click_num,platform,type,create_time,
         update_time,is_deleted
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
-        from ad_info
+        from ad_po_info
         where  id = #{id} 
     </select>
-
-    <select id="list" resultType="com.ad.web.entity.Ad">
-        select * from ad_info  where is_deleted = 0 order by view_count
+    <select id="getAllAdPo" resultType="com.ad.web.entity.AdPo">
+        select <include refid="Base_Column_List"/>
+        from ad_po_info
     </select>
-    <select id="getAdByInfo" resultType="com.ad.web.entity.Ad">
-        select * from ad_info where name like concat('%',#{searchInfo},'%') and is_deleted = 0
+    <select id="getAdPoOrderByClickNum" resultType="com.ad.web.entity.AdPo">
+        select <include refid="Base_Column_List"/>
+        from ad_po_info
+        where is_deleted =0
+        order by click_num
+        limit #{choseNum}
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete from ad_info
+        delete from ad_po_info
         where  id = #{id} 
     </delete>
-    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.Ad" useGeneratedKeys="true">
-        insert into ad_info
-        ( id,name,price,view_count,introduction,create_time,
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.AdPo" useGeneratedKeys="true">
+        insert into ad_po_info
+        ( id,name,content,price,click_num,create_time,
         update_time,is_deleted)
-        values (#{id},#{name},#{price},#{viewCount},#{introduction},#{createTime},
+        values (#{id},#{name},#{content},#{price},#{clickNum},#{createTime},
         #{updateTime},#{isDeleted})
     </insert>
-    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.Ad" useGeneratedKeys="true">
-        insert into ad_info
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.AdPo" useGeneratedKeys="true">
+        insert into ad_po_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="id != null">id,</if>
                 <if test="name != null">name,</if>
+                <if test="content != null">content,</if>
                 <if test="price != null">price,</if>
-                <if test="viewCount != null">view_count,</if>
-                <if test="introduction != null">introduction,</if>
+                <if test="clickNum != null">click_num,</if>
                 <if test="createTime != null">create_time,</if>
                 <if test="updateTime != null">update_time,</if>
                 <if test="isDeleted != null">is_deleted,</if>
@@ -60,28 +64,28 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="id != null">#{id},</if>
                 <if test="name != null">#{name},</if>
+                <if test="content != null">#{content},</if>
                 <if test="price != null">#{price},</if>
-                <if test="viewCount != null">#{viewCount},</if>
-                <if test="introduction != null">#{introduction},</if>
+                <if test="clickNum != null">#{clickNum},</if>
                 <if test="createTime != null">#{createTime},</if>
                 <if test="updateTime != null">#{updateTime},</if>
                 <if test="isDeleted != null">#{isDeleted},</if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.ad.web.entity.Ad">
-        update ad_info
+    <update id="updateByPrimaryKeySelective" parameterType="com.ad.web.entity.AdPo">
+        update ad_po_info
         <set>
                 <if test="name != null">
                     name = #{name},
                 </if>
+                <if test="content != null">
+                    content = #{content},
+                </if>
                 <if test="price != null">
                     price = #{price},
                 </if>
-                <if test="viewCount != null">
-                    view_count = #{viewCount},
-                </if>
-                <if test="introduction != null">
-                    introduction = #{introduction},
+                <if test="clickNum != null">
+                    click_num = #{clickNum},
                 </if>
                 <if test="createTime != null">
                     create_time = #{createTime},
@@ -95,13 +99,13 @@
         </set>
         where   id = #{id} 
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.ad.web.entity.Ad">
-        update ad_info
+    <update id="updateByPrimaryKey" parameterType="com.ad.web.entity.AdPo">
+        update ad_po_info
         set 
             name =  #{name},
+            content =  #{content},
             price =  #{price},
-            view_count =  #{viewCount},
-            introduction =  #{introduction},
+            click_num =  #{clickNum},
             create_time =  #{createTime},
             update_time =  #{updateTime},
             is_deleted =  #{isDeleted}

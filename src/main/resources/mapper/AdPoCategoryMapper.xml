@@ -2,73 +2,68 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ad.web.mapper.UserBuyAdMapper">
+<mapper namespace="com.ad.web.mapper.AdPoCategoryMapper">
 
-    <resultMap id="BaseResultMap" type="com.ad.web.entity.UserBuyAd">
+    <resultMap id="BaseResultMap" type="com.ad.web.entity.AdPoCategory">
             <id property="id" column="id" />
-            <result property="userId" column="user_id" />
-            <result property="adId" column="ad_id" />
-            <result property="time" column="time" />
+            <result property="adPoId" column="ad_po_id" />
+            <result property="categoryId" column="category_id" />
             <result property="createTime" column="create_time" />
             <result property="updateTime" column="update_time" />
             <result property="isDeleted" column="is_deleted" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_id,ad_id,time,create_time,update_time,
-        is_deleted
+        id,ad_po_id,category_id,create_time,update_time,is_deleted
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
-        from user_buy_ad
+        from ad_po_category
         where  id = #{id} 
+    </select>
+    <select id="getCategoryIdsByAdPoId" resultType="java.lang.Long">
+        select category_id from ad_po_category
+        where ad_po_id = #{adPoId} and is_deleted = 0;
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete from user_buy_ad
+        delete from ad_po_category
         where  id = #{id} 
     </delete>
-    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.UserBuyAd" useGeneratedKeys="true">
-        insert into user_buy_ad
-        ( id,user_id,ad_id,time,create_time,update_time,
-        is_deleted)
-        values (#{id},#{userId},#{adId},#{time},#{createTime},#{updateTime},
-        #{isDeleted})
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.AdPoCategory" useGeneratedKeys="true">
+        insert into ad_po_category
+        ( id,ad_po_id,category_id,create_time,update_time,is_deleted)
+        values (#{id},#{adPoId},#{categoryId},#{createTime},#{updateTime},#{isDeleted})
     </insert>
-    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.UserBuyAd" useGeneratedKeys="true">
-        insert into user_buy_ad
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.AdPoCategory" useGeneratedKeys="true">
+        insert into ad_po_category
         <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="id != null">id,</if>
-                <if test="userId != null">user_id,</if>
-                <if test="adId != null">ad_id,</if>
-                <if test="time != null">time,</if>
+                <if test="adPoId != null">ad_po_id,</if>
+                <if test="categoryId != null">category_id,</if>
                 <if test="createTime != null">create_time,</if>
                 <if test="updateTime != null">update_time,</if>
                 <if test="isDeleted != null">is_deleted,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="id != null">#{id},</if>
-                <if test="userId != null">#{userId},</if>
-                <if test="adId != null">#{adId},</if>
-                <if test="time != null">#{time},</if>
+                <if test="adPoId != null">#{adPoId},</if>
+                <if test="categoryId != null">#{categoryId},</if>
                 <if test="createTime != null">#{createTime},</if>
                 <if test="updateTime != null">#{updateTime},</if>
                 <if test="isDeleted != null">#{isDeleted},</if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.ad.web.entity.UserBuyAd">
-        update user_buy_ad
+    <update id="updateByPrimaryKeySelective" parameterType="com.ad.web.entity.AdPoCategory">
+        update ad_po_category
         <set>
-                <if test="userId != null">
-                    user_id = #{userId},
+                <if test="adPoId != null">
+                    ad_po_id = #{adPoId},
                 </if>
-                <if test="adId != null">
-                    ad_id = #{adId},
-                </if>
-                <if test="time != null">
-                    time = #{time},
+                <if test="categoryId != null">
+                    category_id = #{categoryId},
                 </if>
                 <if test="createTime != null">
                     create_time = #{createTime},
@@ -82,12 +77,11 @@
         </set>
         where   id = #{id} 
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.ad.web.entity.UserBuyAd">
-        update user_buy_ad
+    <update id="updateByPrimaryKey" parameterType="com.ad.web.entity.AdPoCategory">
+        update ad_po_category
         set 
-            user_id =  #{userId},
-            ad_id =  #{adId},
-            time =  #{time},
+            ad_po_id =  #{adPoId},
+            category_id =  #{categoryId},
             create_time =  #{createTime},
             update_time =  #{updateTime},
             is_deleted =  #{isDeleted}
