@@ -20,6 +20,27 @@
 <form th:action="@{/graph/upload}" method="post" enctype="multipart/form-data">
     上传<input type="file" name="graph">
     <input type="submit" value="测试图片的上传,服务器->浏览器—>minio">
+</form><hr>
+<form th:action="@{/order}" method="post" enctype="multipart/form-data">
+    上传<input type="file" name="file">
+    <input name="userId" type="text">
+    <input name="adPoId" type="text">
+    <input name="isInvoice" type="text">
+    <input name="deliveryNum" type="text">
+    <input name="startTime" type="text">
+    <input name="endTime" type="text">
+    <input type="submit" value="测试订单的上传">
 </form><br>
+{
+"id":"",
+"userId": 8,
+"adPoId": 15,
+"time": "",
+"isInvoice": 0,
+"deliveryNum": 999,
+"startTime": "2025-4-30",
+"endTime": "2026-4-1",
+"content": ""
+}
 </body>
 </html>

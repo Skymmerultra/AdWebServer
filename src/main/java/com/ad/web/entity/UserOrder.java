@@ -2,14 +2,19 @@ package com.ad.web.entity;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 用户订单表
  * @TableName user_order
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserOrder {
     /**
      * 
@@ -29,6 +34,7 @@ public class UserOrder {
     /**
      * 购买时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Date time;
 
     /**
@@ -44,11 +50,13 @@ public class UserOrder {
     /**
      * 开始时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date startTime;
 
     /**
      * 创建时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date endTime;
 
     /**

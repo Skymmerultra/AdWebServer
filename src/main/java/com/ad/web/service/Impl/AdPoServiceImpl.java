@@ -45,17 +45,16 @@ public class AdPoServiceImpl implements AdPoService {
         AdPoVo adPoVo = new AdPoVo();
         adPoVo.setInformation(adPo);
 
-        List<String> graphUrlList = CompletableFuture.supplyAsync(() -> {
-                    return graphService.
-                            getGraphListByTypeAndId(GraphType.ADVERTISEMENT_POSITION_GRAPH.getNum(), adPo.getId());
-                }, threadPool).join()
+        List<String> graphUrlList = CompletableFuture.supplyAsync(() -> graphService
+                        .getGraphListByTypeAndId(GraphType.ADVERTISEMENT_POSITION_GRAPH.getNum(), adPo.getId()), threadPool)
+                .join()
                 .stream()
                 .map(GraphVo::getUrl)
                 .toList();
 
-        List<String> categories = CompletableFuture.supplyAsync(() -> {
-                    return categoryService.getCategoryListByAdPoId(adPo.getId());
-                }, threadPool).join()
+        List<String> categories = CompletableFuture.supplyAsync(() -> categoryService
+                        .getCategoryListByAdPoId(adPo.getId()), threadPool)
+                .join()
                 .stream()
                 .map(Category::getName)
                 .toList();
