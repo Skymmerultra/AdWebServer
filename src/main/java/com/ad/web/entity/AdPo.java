@@ -3,13 +3,18 @@ package com.ad.web.entity;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 广告位信息表
  * @TableName ad_po_info
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AdPo {
     /**
      * 广告位id

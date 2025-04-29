@@ -2,11 +2,16 @@ package com.ad.web.service.Impl;
 
 import com.ad.web.common.Enum.GraphType;
 import com.ad.web.common.result.ResultCodeEnum;
+import com.ad.web.entity.AdPo;
 import com.ad.web.entity.User;
 import com.ad.web.entity.UserOrder;
+import com.ad.web.entity.UserViewAd;
 import com.ad.web.exception.AdWebException;
+import com.ad.web.mapper.UserFavoritesAdMapper;
 import com.ad.web.mapper.UserMapper;
 import com.ad.web.mapper.UserOrderMapper;
+import com.ad.web.mapper.UserViewAdMapper;
+import com.ad.web.service.AdPoService;
 import com.ad.web.service.GraphService;
 import com.ad.web.service.UserService;
 import io.minio.errors.*;
@@ -20,6 +25,7 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -32,6 +38,15 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private GraphService graphService;
+
+    @Autowired
+    private UserViewAdMapper userViewAdMapper;
+
+    @Autowired
+    private AdPoService adPoService;
+
+    @Autowired
+    private UserFavoritesAdMapper userFavoritesAdMapper;
 
     @Override
     public void register(String username,String password) {
@@ -87,12 +102,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserOrder getOrderByUserId(Long userId) {
+    public List<UserOrder> getOrderByUserId(Long userId) {
         return userOrderMapper.getOrderByUserId(userId);
     }
 
     @Override
     public Integer getBalanceById(Long userId) {
         return userMapper.getBalanceById(userId);
+    }
+
+    @Override
+    public List<AdPo> getViewHistoryById(Long userId) {
+        return userViewAdMapper.getViewAdPoIdByUserId(userId)
+                .stream()
+                .map(adPoId->adPoService.getAdPoById(adPoId))
+                .toList();
+    }
+
+    @Override
+    public List<AdPo> getFavoritesById(Long userId) {
+        return userFavoritesAdMapper.getFavorAdPoIdByUserId(userId)
+                .stream()
+                .map(adPoId->adPoService.getAdPoById(adPoId))
+                .toList();
     }
 }

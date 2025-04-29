@@ -1,5 +1,6 @@
 package com.ad.web.service;
 
+import com.ad.web.entity.AdPo;
 import com.ad.web.entity.User;
 import com.ad.web.entity.UserOrder;
 import io.minio.errors.*;
@@ -8,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 public interface UserService {
     void register(String username,String password);
@@ -21,7 +23,11 @@ public interface UserService {
 
     void updateUSerInfo(User user);
 
-    UserOrder getOrderByUserId(Long userId);
+    List<UserOrder> getOrderByUserId(Long userId);
 
     Integer getBalanceById(Long userId);
+
+    List<AdPo> getViewHistoryById(Long userId);
+
+    List<AdPo> getFavoritesById(Long userId);
 }

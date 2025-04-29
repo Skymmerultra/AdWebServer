@@ -1,6 +1,7 @@
 package com.ad.web.controller.user;
 
 import com.ad.web.common.result.Result;
+import com.ad.web.entity.AdPo;
 import com.ad.web.entity.User;
 import com.ad.web.entity.UserOrder;
 import com.ad.web.service.UserService;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @RestController
 @Tag(name = "用户handle")
@@ -62,8 +64,8 @@ public class UserController {
 
     @Operation(description = "根据用户id获取订单信息")
     @GetMapping("/order/{id}")
-    public Result<UserOrder> getOrderByUserId(@PathVariable("id")Long userId){
-        UserOrder result = userService.getOrderByUserId(userId);
+    public Result<List<UserOrder>> getOrderByUserId(@PathVariable("id")Long userId){
+        List<UserOrder> result = userService.getOrderByUserId(userId);
         return Result.ok(result);
     }
 
@@ -71,6 +73,18 @@ public class UserController {
     @GetMapping("/balance/{id}")
     public Result<Integer> getBalanceById(@PathVariable("id")Long userId){
         Integer result = userService.getBalanceById(userId);
+        return Result.ok(result);
+    }
+    @Operation(description = "根据用户id获取用户浏览历史")
+    @GetMapping("/viewhistory/{id}")
+    public Result<List<AdPo>> getViewHistoryById(@PathVariable("id")Long userId){
+        List<AdPo> result = userService.getViewHistoryById(userId);
+        return Result.ok(result);
+    }
+    @Operation(description = "根据用户id获取用户收藏")
+    @GetMapping("/favorites/{id}")
+    public Result<List<AdPo>> getFavoritesById(@PathVariable("id")Long userId){
+        List<AdPo> result = userService.getFavoritesById(userId);
         return Result.ok(result);
     }
 }

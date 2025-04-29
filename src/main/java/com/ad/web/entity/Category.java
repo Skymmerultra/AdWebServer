@@ -3,13 +3,17 @@ package com.ad.web.entity;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 广告位种类表
  * @TableName category
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Category {
     /**
      * 

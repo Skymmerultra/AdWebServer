@@ -19,6 +19,7 @@ import java.util.Date;
 @Service
 public class UserOrderServiceImpl implements UserOrderService {
 
+    private static final String DefaultPayType = "支付宝";
     @Autowired
     private FileService fileService;
     @Autowired
@@ -35,10 +36,15 @@ public class UserOrderServiceImpl implements UserOrderService {
     }
 
     @Override
-    public void createOrder(MultipartFile file, Long userId, Long adPoId, Integer isInvoice, Integer deliveryNum, Date startTime, Date endTime) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+    public void createOrder(MultipartFile file, Long userId, Long adPoId, Integer isInvoice, Integer deliveryNum, Date startTime, Date endTime,Integer payment,String payType) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+
         String content = fileService.upload(file);
 
-        UserOrder order = new UserOrder(null,userId,adPoId,new Date(),isInvoice,deliveryNum,startTime,endTime,content,new Date(),null,0);
+        if (payType.isBlank()){
+            payType = DefaultPayType;
+        }
+
+        UserOrder order = new UserOrder(null,userId,adPoId,new Date(),isInvoice,deliveryNum,startTime,endTime,content,payment,payType,new Date(),null,0);
         userOrderMapper.insertSelective(order);
 
     }

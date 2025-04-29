@@ -34,7 +34,7 @@ public class UserOrder {
     /**
      * 购买时间
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH-mm-ss")
     private Date time;
 
     /**
@@ -50,19 +50,29 @@ public class UserOrder {
     /**
      * 开始时间
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd")
     private Date startTime;
 
     /**
-     * 创建时间
+     * 结束时间
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd")
     private Date endTime;
 
     /**
      * 投递内容
      */
     private String content;
+
+    /**
+     * 支付金额
+     */
+    private Integer payment;
+
+    /**
+     * 支付方式
+     */
+    private String payType;
 
     /**
      * 创建时间
@@ -103,6 +113,8 @@ public class UserOrder {
             && (this.getStartTime() == null ? other.getStartTime() == null : this.getStartTime().equals(other.getStartTime()))
             && (this.getEndTime() == null ? other.getEndTime() == null : this.getEndTime().equals(other.getEndTime()))
             && (this.getContent() == null ? other.getContent() == null : this.getContent().equals(other.getContent()))
+            && (this.getPayment() == null ? other.getPayment() == null : this.getPayment().equals(other.getPayment()))
+            && (this.getPayType() == null ? other.getPayType() == null : this.getPayType().equals(other.getPayType()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
             && (this.getIsDeleted() == null ? other.getIsDeleted() == null : this.getIsDeleted().equals(other.getIsDeleted()));
@@ -121,6 +133,8 @@ public class UserOrder {
         result = prime * result + ((getStartTime() == null) ? 0 : getStartTime().hashCode());
         result = prime * result + ((getEndTime() == null) ? 0 : getEndTime().hashCode());
         result = prime * result + ((getContent() == null) ? 0 : getContent().hashCode());
+        result = prime * result + ((getPayment() == null) ? 0 : getPayment().hashCode());
+        result = prime * result + ((getPayType() == null) ? 0 : getPayType().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         result = prime * result + ((getIsDeleted() == null) ? 0 : getIsDeleted().hashCode());
@@ -142,6 +156,8 @@ public class UserOrder {
         sb.append(", startTime=").append(startTime);
         sb.append(", endTime=").append(endTime);
         sb.append(", content=").append(content);
+        sb.append(", payment=").append(payment);
+        sb.append(", payType=").append(payType);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", isDeleted=").append(isDeleted);

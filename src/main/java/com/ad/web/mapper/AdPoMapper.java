@@ -28,4 +28,6 @@ public interface AdPoMapper {
     List<AdPo> getAllAdPo();
 
     List<AdPo> getAdPoOrderByClickNum(@Param("choseNum") int choseNum);
+
+    List<AdPo> getAdPoListById(Long id);
 }

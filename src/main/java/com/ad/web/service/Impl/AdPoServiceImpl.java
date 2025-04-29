@@ -11,10 +11,13 @@ import com.ad.web.service.CategoryService;
 import com.ad.web.service.GraphService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 @Service
 public class AdPoServiceImpl implements AdPoService {
@@ -31,13 +34,19 @@ public class AdPoServiceImpl implements AdPoService {
         return adPoMapper.getAllAdPo();
     }
 
-    private static final int choseAdPo = 3;
+    private static final int choseAdPo = 7;
     @Override
     public List<AdPoVo> getSomeAdPoVoOrderByClickNum() {
         List<AdPo> adPoList = adPoMapper.getAdPoOrderByClickNum(choseAdPo);
+
         return adPoList.stream()
                 .map(this::convertToAdPoVo)
                 .toList();
+    }
+
+    @Override
+    public AdPo getAdPoById(Long id) {
+        return adPoMapper.selectByPrimaryKey(id);
     }
 
     private AdPoVo convertToAdPoVo(AdPo adPo){

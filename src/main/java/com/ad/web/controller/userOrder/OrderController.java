@@ -49,11 +49,13 @@ public class OrderController {
                               @RequestParam("userId")Long userId,
                               @RequestParam("adPoId")Long adPoId,
                               @RequestParam("isInvoice")Integer isInvoice,
+                              @RequestParam("payment")Integer payment,
+                              @RequestParam("payType")String payType,
                               @RequestParam("deliveryNum")Integer deliveryNum,
                               @RequestParam("startTime")@DateTimeFormat(pattern = "yyyy-MM-dd") Date startTime,
                               @RequestParam("endTime")@DateTimeFormat(pattern = "yyyy-MM-dd") Date endTime
                               ) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-        userOrderService.createOrder(file,userId,adPoId,isInvoice,deliveryNum,startTime,endTime);
+        userOrderService.createOrder(file,userId,adPoId,isInvoice,deliveryNum,startTime,endTime,payment,payType);
         return Result.ok();
     }
 }

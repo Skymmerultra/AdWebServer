@@ -24,6 +24,7 @@ public class User {
     /**
      * 密码
      */
+    @JsonIgnore
     private String password;
 
     /**

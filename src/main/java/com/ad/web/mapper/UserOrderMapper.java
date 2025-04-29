@@ -2,10 +2,12 @@ package com.ad.web.mapper;
 
 import com.ad.web.entity.UserOrder;
 
+import java.util.List;
+
 /**
 * @author 朱炫宇
 * @description 针对表【user_order(用户订单表)】的数据库操作Mapper
-* @createDate 2025-04-25 21:17:14
+* @createDate 2025-04-26 13:21:56
 * @Entity com.ad.web.entity.UserOrder
 */
 public interface UserOrderMapper {
@@ -22,7 +24,7 @@ public interface UserOrderMapper {
 
     int updateByPrimaryKey(UserOrder record);
 
-    UserOrder getOrderByUserId(Long userId);
+    int orderInvoice(Long orderId);
 
-    void orderInvoice(Long orderId);
+    List<UserOrder> getOrderByUserId(Long userId);
 }

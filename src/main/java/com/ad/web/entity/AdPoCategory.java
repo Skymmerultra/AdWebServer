@@ -3,13 +3,17 @@ package com.ad.web.entity;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 广告位类别关联表
  * @TableName ad_po_category
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AdPoCategory {
     /**
      * 
@@ -43,6 +47,7 @@ public class AdPoCategory {
      */
     @JsonIgnore
     private Integer isDeleted;
+
 
     @Override
     public boolean equals(Object that) {

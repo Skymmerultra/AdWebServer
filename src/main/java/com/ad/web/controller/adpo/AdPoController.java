@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -33,4 +34,13 @@ public class AdPoController {
         List<AdPoVo> result = adPoService.getSomeAdPoVoOrderByClickNum();
         return Result.ok(result);
     }
+
+    @Operation(description = "根据关键字搜索广告位")
+    @GetMapping("getAdPoListByKeyWord")
+    public Result<List<AdPoVo>> getAdPoListByKeyWord(@RequestParam("keyWord") String keyWord){
+
+        return Result.ok();
+    }
+
+
 }

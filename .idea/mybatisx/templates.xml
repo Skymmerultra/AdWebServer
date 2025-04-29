@@ -49,8 +49,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="UserOrder" />
-                  <option name="tableName" value="user_order" />
+                  <option name="className" value="UserFavoritesAd" />
+                  <option name="tableName" value="user_favorites_ad" />
                 </TableUIInfo>
               </list>
             </option>

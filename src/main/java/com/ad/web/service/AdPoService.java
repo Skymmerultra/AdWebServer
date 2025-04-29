@@ -9,4 +9,6 @@ public interface AdPoService {
     List<AdPo> getAllAdPo();
 
     List<AdPoVo> getSomeAdPoVoOrderByClickNum();
+
+    AdPo getAdPoById(Long id);
 }

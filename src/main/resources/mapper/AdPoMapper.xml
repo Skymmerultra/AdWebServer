@@ -34,8 +34,13 @@
         select <include refid="Base_Column_List"/>
         from ad_po_info
         where is_deleted =0
-        order by click_num
+        order by click_num desc
         limit #{choseNum}
+    </select>
+    <select id="getAdPoListById" resultType="com.ad.web.entity.AdPo">
+        select <include refid="Base_Column_List"/>
+        from ad_po_info
+        where id = #{id} and is_deleted = 0
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -44,9 +49,9 @@
     </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.AdPo" useGeneratedKeys="true">
         insert into ad_po_info
-        ( id,name,content,price,click_num,create_time,
-        update_time,is_deleted)
-        values (#{id},#{name},#{content},#{price},#{clickNum},#{createTime},
+        (id,name,content,price,click_num,platform,type,create_time,
+         update_time,is_deleted)
+        values (#{id},#{name},#{content},#{price},#{clickNum},#{platform},#{type},#{createTime},
         #{updateTime},#{isDeleted})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.AdPo" useGeneratedKeys="true">
@@ -57,28 +62,32 @@
                 <if test="content != null">content,</if>
                 <if test="price != null">price,</if>
                 <if test="clickNum != null">click_num,</if>
+                <if test="platform != null and platform != ''">click_num,</if>
+                <if test="type != null and type != ''">click_num,</if>
                 <if test="createTime != null">create_time,</if>
                 <if test="updateTime != null">update_time,</if>
                 <if test="isDeleted != null">is_deleted,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="id != null">#{id},</if>
-                <if test="name != null">#{name},</if>
-                <if test="content != null">#{content},</if>
-                <if test="price != null">#{price},</if>
-                <if test="clickNum != null">#{clickNum},</if>
-                <if test="createTime != null">#{createTime},</if>
-                <if test="updateTime != null">#{updateTime},</if>
-                <if test="isDeleted != null">#{isDeleted},</if>
+               <if test="id != null">id,</if>
+               <if test="name != null">name,</if>
+               <if test="content != null">content,</if>
+               <if test="price != null">price,</if>
+               <if test="clickNum != null">click_num,</if>
+               <if test="platform != null and platform != ''">click_num,</if>
+               <if test="type != null and type != ''">click_num,</if>
+               <if test="createTime != null">create_time,</if>
+               <if test="updateTime != null">update_time,</if>
+               <if test="isDeleted != null">is_deleted,</if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.ad.web.entity.AdPo">
         update ad_po_info
         <set>
-                <if test="name != null">
+                <if test="name != null and name != ''">
                     name = #{name},
                 </if>
-                <if test="content != null">
+                <if test="content != null and content != ''">
                     content = #{content},
                 </if>
                 <if test="price != null">
@@ -86,6 +95,12 @@
                 </if>
                 <if test="clickNum != null">
                     click_num = #{clickNum},
+                </if>
+                <if test="platform != null and platform != ''">
+                    platform = #{platform},
+                </if>
+                <if test="type != null and type != ''">
+                    type = #{type},
                 </if>
                 <if test="createTime != null">
                     create_time = #{createTime},
@@ -106,6 +121,8 @@
             content =  #{content},
             price =  #{price},
             click_num =  #{clickNum},
+            platform = #{platform},
+            type = #{type},
             create_time =  #{createTime},
             update_time =  #{updateTime},
             is_deleted =  #{isDeleted}

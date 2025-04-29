@@ -14,6 +14,8 @@
             <result property="startTime" column="start_time" />
             <result property="endTime" column="end_time" />
             <result property="content" column="content" />
+            <result property="payment" column="payment" />
+            <result property="payType" column="pay_type" />
             <result property="createTime" column="create_time" />
             <result property="updateTime" column="update_time" />
             <result property="isDeleted" column="is_deleted" />
@@ -21,8 +23,8 @@
 
     <sql id="Base_Column_List">
         id,user_id,ad_po_id,time,is_invoice,delivery_num,
-        start_time,end_time,content,create_time,update_time,
-        is_deleted
+        start_time,end_time,content,payment,pay_type,
+        create_time,update_time,is_deleted
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -44,11 +46,11 @@
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.UserOrder" useGeneratedKeys="true">
         insert into user_order
         ( id,user_id,ad_po_id,time,is_invoice,delivery_num,
-        start_time,end_time,content,create_time,update_time,
-        is_deleted)
+        start_time,end_time,content,payment,pay_type,
+        create_time,update_time,is_deleted)
         values (#{id},#{userId},#{adPoId},#{time},#{isInvoice},#{deliveryNum},
-        #{startTime},#{endTime},#{content},#{createTime},#{updateTime},
-        #{isDeleted})
+        #{startTime},#{endTime},#{content},#{payment},#{payType},
+        #{createTime},#{updateTime},#{isDeleted})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.UserOrder" useGeneratedKeys="true">
         insert into user_order
@@ -62,6 +64,8 @@
                 <if test="startTime != null">start_time,</if>
                 <if test="endTime != null">end_time,</if>
                 <if test="content != null">content,</if>
+                <if test="payment != null">payment,</if>
+                <if test="payType != null">pay_type,</if>
                 <if test="createTime != null">create_time,</if>
                 <if test="updateTime != null">update_time,</if>
                 <if test="isDeleted != null">is_deleted,</if>
@@ -76,6 +80,8 @@
                 <if test="startTime != null">#{startTime},</if>
                 <if test="endTime != null">#{endTime},</if>
                 <if test="content != null">#{content},</if>
+                <if test="payment != null">#{payment},</if>
+                <if test="payType != null">#{payType},</if>
                 <if test="createTime != null">#{createTime},</if>
                 <if test="updateTime != null">#{updateTime},</if>
                 <if test="isDeleted != null">#{isDeleted},</if>
@@ -108,6 +114,12 @@
                 <if test="content != null">
                     content = #{content},
                 </if>
+                <if test="payment != null">
+                    payment = #{payment},
+                </if>
+                <if test="payType != null">
+                    pay_type = #{payType},
+                </if>
                 <if test="createTime != null">
                     create_time = #{createTime},
                 </if>
@@ -131,6 +143,8 @@
             start_time =  #{startTime},
             end_time =  #{endTime},
             content =  #{content},
+            payment =  #{payment},
+            pay_type =  #{payType},
             create_time =  #{createTime},
             update_time =  #{updateTime},
             is_deleted =  #{isDeleted}
@@ -140,6 +154,6 @@
         update user_order
         set
             is_invoice = 1
-        where id = #{orderId} and is_deleted = 0
+        where id=#{userId} and is_deleted = 0
     </update>
 </mapper>
