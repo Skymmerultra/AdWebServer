@@ -20,7 +20,12 @@ const routes = [
     component: () => import('../views/UserWallet.vue')
   },
   {
-    path:'/addetail',
+    path:'/user/collection',
+    name:'usercollection',
+    component:() => import('../views/UserCollection.vue')
+  },
+  {
+    path:'/addetail/:adId',
     name:'addetail',
     component:() => import('../views/AdDetail.vue')
   }

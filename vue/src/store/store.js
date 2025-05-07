@@ -4,20 +4,22 @@ import { createStore } from 'vuex';
 const store = createStore({
   state() {
     return {
-      userId: null,
-      isLoggedIn:false,
+      userId: sessionStorage.getItem('userId') || null,
+      isLoggedIn:sessionStorage.getItem('isLoggedIn') || false
     };
   },
   mutations: {
     setUserId(state, userId) {
-      state.userId = userId; 
+      state.userId = userId;
+      sessionStorage.setItem('userId', userId);
     },
     setIsLoggedIn(state,isLoggedIn){
         state.isLoggedIn = isLoggedIn;
+        sessionStorage.setItem('isLoggedIn', isLoggedIn);
     }
   },
   actions: {
-    login({ commit }, userId) {
+      login({ commit }, userId) {
         commit('setUserId', userId);         // 更新用户ID
         commit('setIsLoggedIn', true);       // 设置为已登录
       },
