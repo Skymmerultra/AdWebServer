@@ -5,7 +5,7 @@
     <!-- 走马灯展示图片 -->
     <div class="left">
       <el-carousel trigger="click"  class="image-container">
-        <el-carousel-item v-for="(image, index) in adInfo.image_src || []" :key="index">
+        <el-carousel-item v-for="(image, index) in adInfo?.image_src || []" :key="index">
           <img :src="image" alt="Advertisement Image"  class="ad-image"/>
         </el-carousel-item> 
       </el-carousel>
@@ -13,7 +13,9 @@
 
     <div class="right">
       <h1 >{{ adInfo?.information?.name }}</h1>
+
       <u class="adInfo-content">{{ adInfo?.information?.content }}</u>
+
       <el-descriptions 
         class="descriptions"
         column="1"
@@ -32,6 +34,15 @@
           {{ adInfo?.information?.type }}
         </el-descriptions-item>
       </el-descriptions> 
+
+      <h2>定位</h2>
+      <div style="display: flex; flex-wrap: wrap;">
+        <span v-for="(category, index) in adInfo?.categories" :key="index">
+          /{{ category }}
+          </span>
+      </div>
+
+
       <p class="ad-price"><strong>售价: </strong><u>￥{{ adInfo?.information?.price}}</u></p>
       <el-button type="warning" size="large" @click="purchase">立即购买</el-button>
     </div>
@@ -40,12 +51,13 @@
     v-model="dialogVisible" 
     :close-on-click-modal="false"
     class="purchase-dialog" 
-    center 
+    center
+    @close="ReSetForm" 
     >
     
     <el-form>
       <el-form-item>
-        <el-upload
+        <!--<el-upload
               ref="upload"
               :file-list="fileList"
               action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
@@ -61,10 +73,12 @@
               <el-button type="primary">Click to upload</el-button>
               <template #tip>
                 <div class="el-upload__tip">
-                  请上传文件或视频
+                  请上传图片或视频
                 </div>
               </template>
-            </el-upload>
+        </el-upload> -->
+
+        <input type="file" ref="fileInput" accept="image/*,video/*,pdf" @change="handleFileChange"/>
       </el-form-item>
       <el-form-item label="投递次数">
         <el-input-number v-model="diliveryNum" :min="1" :max="100"></el-input-number>
@@ -105,6 +119,7 @@
 <script>
 import axios from 'axios';
 import AppHeader from '../components/AppHeader.vue';
+import {ElMessage} from 'element-plus';
 import { ElMessageBox } from 'element-plus';
 export default {
   components:{
@@ -123,9 +138,8 @@ export default {
   },
   data() {
     return {
-      order_form:{},
-      dialogVisible:false,
       adInfo: {},
+      dialogVisible:false,
       adId:null,
       payType:null,
       diliveryNum: 1,
@@ -137,11 +151,13 @@ export default {
           return time < new Date(); // 返回 true 禁用当前日期之前的日期
         },
       },
-      filelist:[]
+      //fileList:[],
+      file:null
     };
   },
   created() {
-    this.adId = this.$route.params.id
+    this.adId = this.$route.params.adId;
+    // console.log("adcard传递的广告id为",this.adId);
   },
   methods:{
     purchase() {
@@ -161,33 +177,88 @@ export default {
            this.dialogVisible=true;
         }
     },
-    purchase_confirm(){
-      const formData = new FormData();
-      formData.append('file', this.fileList[0].raw);
-      this.order_form={
-      adPoId:this.adId,
-      userId:this.userId,
-      diliveryNum:this.diliveryNum,
-      startTime:this.dateRange[0],
-      endTime:this.dateRange[1],
-      isInvoice:this.isInvoice,
-      file:formData,
-      payment:this.payment,
-      payType:this.payType,
-     }
-     axios.post(`https://.../order`, this.order_form)
-      .then(response => {
-        if(response.data.code === 200) { 
-          console.log("购买成功");
+    handleFileChange(){
+      const inputElement = this.$refs.fileInput; 
+      const files = inputElement.files; 
+      if(files.length > 0){
+        // console.log("有上传文件");
+        this.file=files[0];
+        const allowedTypes = ['image/jpeg', 'image/png', 'video/mp4', 'application/pdf'];
+        if (!allowedTypes.includes(this.file.type)) {
+          alert('只能上传图片、视频或PDF文件');
+          this.$refs.fileInput.value = '';  // 清空文件输入框
+          return;
         }
-      })
-    }
-
+        // console.log("文件名:",this.file.name);
+      }
+      else{
+        // console.log("无上传文件");
+      }
+    },
+    ReSetForm(){
+      this.$refs.fileInput.value = '';
+      this.diliveryNum = 1;
+      this.dateRange = [new Date(), new Date()];
+      this.isInvoice = false;
+      this.payType = null;
+    },
+    purchase_confirm(){
+      // if (!this.fileList.length) {
+      // ElMessage.error('请上传素材文件');
+      // return;
+      // }
+      if(!this.file){
+        ElMessage.error('请上传广告素材');
+        return;
+      }
+      if (!this.payType) {
+      ElMessage.error('请选择支付方式');
+      return;
+      }
+      const formData = new FormData();
+      formData.append('file', this.file);
+      formData.append('adPoId', this.adId);
+      formData.append('userId', this.$store.getters.getUserId)
+      formData.append('deliveryNum', this.diliveryNum);
+      formData.append('startTime', this.dateRange[0].toISOString());
+      formData.append('endTime', this.dateRange[1].toISOString());
+      formData.append('isInvoice', this.isInvoice);
+      formData.append('payment', this.payment);
+      formData.append('payType', this.payType);
+      // for (let [key, value] of formData.entries()) {
+      // console.log(`${key}:`, value);
+      // }
+      axios.post('https://m1.apifoxmock.com/m1/6267385-5961501-default/order',formData)
+      .then(response => {
+        if(response.data.code === "200") { 
+          alert("购买成功");
+        }
+        else if(response.data.code === "404") {
+          alert("购买失败");
+        }
+        else if(response.code === "404") {
+          console.log("发送失败");
+        }
+        }
+      )
+    },
+    // handleRemove(file) {
+    // const index = this.fileList.indexOf(file);
+    // this.fileList.splice(index, 1);
+    // },
+    // handleExceed(files) {
+    // this.fileList = [files[0]];
+    // },
+    // beforeUpload(file) {
+    // this.fileList = [file];
+    // return false; // 手动上传
+    // }
   },
   mounted() {
-  axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/adpo/1?id=1")
+  axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/adpo/15")
     .then(response => {
       this.adInfo = response.data.data;
+      // alert("广告id为:"+this.adId);
     })
     .catch(error => {
       console.error("There was an error fetching data:", error);
@@ -248,7 +319,7 @@ export default {
 }
 
 .descriptions{
-  margin-top:30px;
+  margin-top:20px;
 }
 :deep(.descriptions .el-descriptions) {
   background-color: inherit; /* 继承父容器背景色 */

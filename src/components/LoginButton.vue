@@ -1,5 +1,5 @@
 <template>
-  <button class="login-Button" @click="openDialog">登录/注册</button>
+  <button class="login-register-Button" @click="openDialog">登录/注册</button>
 
   <!-- 登录弹窗 -->
   <el-dialog v-model="dialogVisible" title="AdWebServer" width="400px" @close="resetLoginForm" align-center center="true">
@@ -10,7 +10,7 @@
           <el-form-item label="密码">
               <el-input v-model="loginForm.password" type="password" placeholder="请输入密码"></el-input>
           </el-form-item>
-          <el-form-item class="login">
+          <el-form-item class="login-confirmButton">
               <el-button type="primary" @click="login">登录</el-button>
           </el-form-item>
       </el-form>
@@ -31,24 +31,24 @@
           <el-input v-model="registerForm.username" placeholder="请输入用户名"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="registerForm.password" type="password" placeholder="请输入密码"></el-input>
+          <el-input v-model="registerForm.password"  placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="registerForm.password" type="password" placeholder="再次请输入密码"></el-input>
+          <el-input v-model="registerForm.checkPassWord"  placeholder="再次请输入密码"></el-input>
         </el-form-item>
-        <el-form-item class="register">
-          <el-button type="primary" @click="onRegisterSubmit">注册</el-button>
+        <el-form-item class="register-confirmButton">
+          <el-button type="primary" @click="Register">注册</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'LoginButton',
   data() {
     return {
-      userId:1,
       // 弹窗显示状态
       dialogVisible: false,
       registerVisible: false,
@@ -61,7 +61,8 @@ export default {
       //注册表单数据
       registerForm:{
         username:'',
-        password:''
+        password:'',
+        checkPassWord:''
       }
     };
   },
@@ -73,6 +74,10 @@ export default {
       this.dialogVisible = false;  
       this.registerVisible = true; 
     },
+    switchToLogin(){
+      this.registerVisible = false;
+      this.dialogVisible = true;
+    },
     resetLoginForm() {
       this.loginForm.username = '';
       this.loginForm.password = '';
@@ -80,18 +85,51 @@ export default {
     resetRegisterForm() {
       this.registerForm.username = '';
       this.registerForm.password = '';
+      this.registerForm.checkPassWord='';
     },
     login(){
-      //登录成功后，返回一个用户id
-      this.$store.dispatch('login', this.userId)  // 登录，传入用户ID
-      console.log(this.userId,this.$store.getters.isLoggedIn)
+      axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/login",this.loginForm)
+      .then(response => {
+        if(response.data.code === "200"){
+          //传入用户id
+          this.$store.dispatch('login',response.data.data);
+          this.$message.success("登录成功");
+          this.dialogVisible = false;
+        }
+        else if(response.data.code === "404"){
+          this.$message.error("登录失败,请稍后重试")
+        }
+      })
+    },
+    Register(){
+      // console.log(this.registerForm);
+      if(this.registerForm.password !== this.registerForm.checkPassWord){
+        this.$message.error("两次密码输入不一致，请重新输入");
+      }
+      else{
+      axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/register",
+        {
+          username:this.username,
+          password:this.password
+        }
+      )
+      .then(response => {
+        if(response.data.code === "200"){
+          this.$message.success("账号注册成功")
+          this.switchToLogin();
+        }
+        else if(response.data.code === "404"){
+          this.$message.error("账号注册失败,请稍后重试")
+        }
+      })
+      }
     }
   }
 };
 </script>
 
 <style scoped>
-  .login-Button {
+.login-register-Button {
   height: 40px;
   padding: 0 24px;
   background-color: #3B82F6;
@@ -105,17 +143,17 @@ export default {
   float:right;
   }
 
-  .login-Button:hover {
+  .login-register-Button:hover {
   background-color: #2563EB;
   transform: translateY(-1px);
   }
 
-  .login-Button:active {
+  .login-register-Button:active {
   background-color: #1D4ED8;
   transform: translateY(1px);
   }
 
-  .login{
+  .login-confirmButton{
     position: relative;
     left:75px;
   }
@@ -132,7 +170,7 @@ export default {
     align-items: center; 
   }
 
-  .register{
+  .register-confirmButton{
     position: relative;
     left:75px;
   }

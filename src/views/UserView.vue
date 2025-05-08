@@ -61,8 +61,13 @@
             </el-descriptions>
         </div>
         <div>
-            <el-button class="button" @click="change">
+            <el-button class="button" @click="open_changeInformation">
                 修改信息
+            </el-button>
+        </div>
+        <div>
+            <el-button class="button" @click="open_changePassword">
+                修改密码
             </el-button>
         </div>
         <div>
@@ -72,27 +77,47 @@
         </div>
       </el-main>
 
-      <el-dialog v-model="dialogVisable">
-        <el-form :model="changeduserInfo">
-          <el-form-item label="用户名">
-            <el-input :model="changeduserInfo.username"/>
+      <el-dialog v-model="information_dialogVisable" @close="close_informationDialog">
+        <el-form :model="changeduserInfo" label-width="70px">
+          <el-form-item label="用户名:">
+            <el-input v-model="changeduserInfo.username" clearable/>
           </el-form-item>
-          <el-form-item label="性别">
-            <el-input  :model="changeduserInfo.sex"/>
+          <el-form-item label="性别:">
+            <el-select v-model="changeduserInfo.sex">
+              <el-option value="男"></el-option>
+              <el-option value="女"></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="手机号">
-            <el-input  :model="changeduserInfo.phone"/>
+          <el-form-item label="手机号:">
+            <el-input  v-model="changeduserInfo.phone" clearable/>
           </el-form-item>
-          <el-form-item label="住址">
-            <el-input :model="changeduserInfo.address"/>
+          <el-form-item label="住址:">
+            <el-input v-model="changeduserInfo.address" clearable/>
           </el-form-item>
-          <el-form-item label="邮箱">
-            <el-input  :model="changeduserInfo.email"/>
+          <el-form-item label="邮箱:">
+            <el-input  v-model="changeduserInfo.email" clearable/>
           </el-form-item>
           <el-form-item>
-            <el-button @click="change_confirm"></el-button>
+            <el-button @click="changeInformation_confirm">确认修改</el-button>
           </el-form-item>
         </el-form>
+      </el-dialog>
+
+      <el-dialog v-model="password_dialogVisable" @close="resetPassword">
+        <el-form :model="passwordForm" :rules="rules" ref="changePassword">
+        <el-form-item label="请输入原密码" prop="oldPassword" label-position="top">
+            <el-input v-model="passwordForm.oldPassword"></el-input>
+        </el-form-item>
+        <el-form-item label="请输入新密码" prop="newPassword" label-position="top">
+            <el-input v-model="passwordForm.newPassword"></el-input>
+        </el-form-item>
+        <el-form-item label="请再次输入新密码" prop="checkPassword" label-position="top">
+            <el-input v-model="passwordForm.checkPassword"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="submitpasswordForm">确认修改</el-button>
+        </el-form-item>
+      </el-form>
       </el-dialog>
     </el-container>
 </template>
@@ -101,8 +126,32 @@
   import axios from 'axios';
   export default {
     data() {
+      // const validOldpassword = (rule,value,callback) => {
+      //   const validOldform = {
+      //     password:value,
+      //     id:this.$store.getters.getUserId
+      //   };
+      //   axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/validoldpassword",validOldform)
+      //   .then(response => {
+      //     if(response.data.code === "200"){
+      //       callback();
+      //     }
+      //     else if(response.data.code === "404"){
+      //       callback(new Error("密码输入错误"));
+      //     }
+      //   })
+      // }
+      // const validPasswordfomat = (rule,value,callback) => {
+        
+      // }
       return {
-        dialogVisable:false,
+        information_dialogVisable:false,
+        password_dialogVisable:false,
+        passwordForm:{
+          oldPassword:"",
+          newPassword:"",
+          checkPassword:"",
+        },
         changeduserInfo:{
           id:this.$store.getters.getUserId,
           username:"",
@@ -111,13 +160,22 @@
           address:"",
           email:"",
         },
-        userInfo: {
-        username: "Skymmer",
-        sex: "男",
-        phone: "18100000000",
-        address: "Suzhou",
-        email: "3358048998@QQ.com"
-      }
+        userInfo:{},
+
+        rules:{
+          oldPassword:[
+            {required:true,message:"请输入旧密码",trigger:'blur'},
+          ],
+          newPassword:[
+            {required:true, message:"请输入新密码", trigger:'blur'},
+            {min:6, max:12, message:"密码长度在6-12位"}
+          ],
+          checkPassword:[
+            {required:true,message:"请再次输入密码",trigger:'blur'},
+            {validator:this.validcheckPassword,trigger:['blur','change']}
+          ]
+
+        }
       };
     },
     methods:{
@@ -128,15 +186,31 @@
         else if(index=="2"){
           this.$router.push({name:'userwallet'});
         }
+        else if(index=="3"){
+          this.$router.push({name:'usercollection'})
+        }
       },
       logout(){
         this.$store.dispatch('logout');
         this.$router.push({name:'home'});
       },
-      change(){
-          this.dialogVisable=true;
+      // handleClick(event) {
+      //  // 触发按钮失去焦点，清除高亮状态
+      // event.target.blur();
+      // },
+      open_changeInformation(event){
+          event.target.blur();
+          this.information_dialogVisable=true;
+          this.changeduserInfo.username=this.userInfo.username;
+          this.changeduserInfo.sex=this.userInfo.sex;
+          this.changeduserInfo.phone=this.userInfo.phone;
+          this.changeduserInfo.address=this.userInfo.address;
+          this.changeduserInfo.email=this.userInfo.email;
       },
-      change_confirm(){
+      close_informationDialog(){
+        this.isActive=false;
+      },
+      changeInformation_confirm(){
         axios.put(`https://m1.apifoxmock.com/m1/6267385-5961501-default/changeinformation`,this.changeduserInfo)
         .then( response => {
           if(response.data.code==200){
@@ -144,12 +218,65 @@
           }
         })
       },
-
+      open_changePassword(event){
+        event.target.blur();
+        this.password_dialogVisable=true;
+      },
+      validcheckPassword(rule,value,callback) {
+        if(value !== this.passwordForm.newPassword){
+          callback(new Error("两次密码输入不一致"));
+        }
+        else{
+          callback();
+        }
+      },
+      resetPassword(){
+        this.$refs.changePassword.resetFields();
+      },
+      async submitpasswordForm() {
+      try {
+        // this.$refs.changePassword.validate((valid) => {
+        // if (valid) {
+        // console.log('验证通过');
+        // } else {
+        // console.log('验证失败');
+        // }
+        // })
+        //await this.$refs.changePassword.clearValidate();
+        // console.log("开始校验表单");
+        await this.$refs.changePassword.validate();
+        // console.log("表单校验成功");
+        // console.log("提交数据:", this.passwordForm);
+        const submitForm={
+          id:this.$store.getters.getUserId,
+          oldpassword: this.passwordForm.oldPassword,
+          newpassword: this.passwordForm.newPassword
+        }
+        // for (const [key, value] of Object.entries(submitForm)) {
+        // console.log(`${key}:`, value);
+        // }
+        const response = await this.$axios.put("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/changepassword",submitForm)
+        if(response.data.code === "200"){
+          this.$message.success('密码修改成功')
+          this.password_dialogVisible = false
+        }
+        else if(response.data.code === "404"){
+          this.$message.warning('密码修改失败,请检查原密码是否正确')
+        }
+        }catch (error) {
+          // console.log(error)
+          this.$message.error("表单输入有误")
+       }
     },
-    mounted(){
-
+  },
+    created(){
+      axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/${this.$store.getters.getUserId}")
+      .then(response => {
+        this.userInfo=response.data.data;
+        // alert("用户id为"+this.$store.getters.getUserId)
+      })
     }
-  };
+  }
   </script>
   
   <style scoped>
@@ -200,5 +327,9 @@
     width:500px;
     font-size: 16px;
 }
+.button:hover{
+  color:rgb(73, 42, 168)
+}
+
   </style>
   
