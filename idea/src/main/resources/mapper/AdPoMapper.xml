@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ad.web.mapper.AdPoMapper">
+
+    <resultMap id="BaseResultMap" type="com.ad.web.entity.AdPo">
+            <id property="id" column="id" />
+            <result property="name" column="name" />
+            <result property="content" column="content" />
+            <result property="price" column="price" />
+            <result property="clickNum" column="click_num" />
+            <result property="createTime" column="create_time" />
+            <result property="updateTime" column="update_time" />
+            <result property="isDeleted" column="is_deleted" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,content,price,click_num,platform,type,create_time,
+        update_time,is_deleted
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ad_po_info
+        where  id = #{id} 
+    </select>
+    <select id="getAllAdPo" resultType="com.ad.web.entity.AdPo">
+        select <include refid="Base_Column_List"/>
+        from ad_po_info
+    </select>
+    <select id="getAdPoOrderByClickNum" resultType="com.ad.web.entity.AdPo">
+        select <include refid="Base_Column_List"/>
+        from ad_po_info
+        where is_deleted =0
+        order by click_num desc
+        limit #{choseNum}
+    </select>
+    <select id="getAdPoListById" resultType="com.ad.web.entity.AdPo">
+        select <include refid="Base_Column_List"/>
+        from ad_po_info
+        where id = #{id} and is_deleted = 0
+    </select>
+    <select id="getAdPoListKeyToName" resultType="com.ad.web.entity.AdPo">
+        select <include refid="Base_Column_List"/>
+        from ad_po_info
+        where name like concat('%',#{keyWord},'%') and is_deleted = 0
+    </select>
+    <select id="getAdPoListKeyToContent" resultType="com.ad.web.entity.AdPo">
+        select <include refid="Base_Column_List"/>
+        from ad_po_info
+        where content like concat('%',#{keyWord},'%') and is_deleted = 0
+    </select>
+    <select id="getAdPoListKeyToPlatform" resultType="com.ad.web.entity.AdPo">
+        select <include refid="Base_Column_List"/>
+        from ad_po_info
+        where platform like concat('%',#{keyWord},'%') and is_deleted = 0
+    </select>
+    <select id="getAdPoListKeyToType" resultType="com.ad.web.entity.AdPo">
+        select <include refid="Base_Column_List"/>
+        from ad_po_info
+        where type like concat('%',#{keyWord},'%') and is_deleted = 0
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from ad_po_info
+        where  id = #{id} 
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.AdPo" useGeneratedKeys="true">
+        insert into ad_po_info
+        (id,name,content,price,click_num,platform,type,create_time,
+         update_time,is_deleted)
+        values (#{id},#{name},#{content},#{price},#{clickNum},#{platform},#{type},#{createTime},
+        #{updateTime},#{isDeleted})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.AdPo" useGeneratedKeys="true">
+        insert into ad_po_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="name != null">name,</if>
+                <if test="content != null">content,</if>
+                <if test="price != null">price,</if>
+                <if test="clickNum != null">click_num,</if>
+                <if test="platform != null and platform != ''">click_num,</if>
+                <if test="type != null and type != ''">click_num,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="updateTime != null">update_time,</if>
+                <if test="isDeleted != null">is_deleted,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+               <if test="id != null">id,</if>
+               <if test="name != null">name,</if>
+               <if test="content != null">content,</if>
+               <if test="price != null">price,</if>
+               <if test="clickNum != null">click_num,</if>
+               <if test="platform != null and platform != ''">click_num,</if>
+               <if test="type != null and type != ''">click_num,</if>
+               <if test="createTime != null">create_time,</if>
+               <if test="updateTime != null">update_time,</if>
+               <if test="isDeleted != null">is_deleted,</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ad.web.entity.AdPo">
+        update ad_po_info
+        <set>
+                <if test="name != null and name != ''">
+                    name = #{name},
+                </if>
+                <if test="content != null and content != ''">
+                    content = #{content},
+                </if>
+                <if test="price != null">
+                    price = #{price},
+                </if>
+                <if test="clickNum != null">
+                    click_num = #{clickNum},
+                </if>
+                <if test="platform != null and platform != ''">
+                    platform = #{platform},
+                </if>
+                <if test="type != null and type != ''">
+                    type = #{type},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime},
+                </if>
+                <if test="updateTime != null">
+                    update_time = #{updateTime},
+                </if>
+                <if test="isDeleted != null">
+                    is_deleted = #{isDeleted},
+                </if>
+        </set>
+        where   id = #{id} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ad.web.entity.AdPo">
+        update ad_po_info
+        set 
+            name =  #{name},
+            content =  #{content},
+            price =  #{price},
+            click_num =  #{clickNum},
+            platform = #{platform},
+            type = #{type},
+            create_time =  #{createTime},
+            update_time =  #{updateTime},
+            is_deleted =  #{isDeleted}
+        where   id = #{id} 
+    </update>
+    <update id="ClickIncrementById">
+        update ad_po_info
+        set
+            click_num = click_num + 1,
+            update_time = Now()
+        where id = #{adPoId} and is_deleted = 0
+    </update>
+</mapper>

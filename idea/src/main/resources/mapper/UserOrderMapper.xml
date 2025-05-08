@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ad.web.mapper.UserOrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.ad.web.entity.UserOrder">
+            <id property="id" column="id" />
+            <result property="userId" column="user_id" />
+            <result property="adPoId" column="ad_po_id" />
+            <result property="time" column="time" />
+            <result property="isInvoice" column="is_invoice" />
+            <result property="deliveryNum" column="delivery_num" />
+            <result property="startTime" column="start_time" />
+            <result property="endTime" column="end_time" />
+            <result property="content" column="content" />
+            <result property="payment" column="payment" />
+            <result property="payType" column="pay_type" />
+            <result property="createTime" column="create_time" />
+            <result property="updateTime" column="update_time" />
+            <result property="isDeleted" column="is_deleted" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,ad_po_id,time,is_invoice,delivery_num,
+        start_time,end_time,content,payment,pay_type,
+        create_time,update_time,is_deleted
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user_order
+        where  id = #{id} and is_deleted = 0
+    </select>
+    <select id="getOrderByUserId" resultType="com.ad.web.entity.UserOrder">
+        select <include refid="Base_Column_List"/>
+        from user_order
+        where user_id = #{userId} and is_deleted = 0
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from user_order
+        where  id = #{id} 
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.UserOrder" useGeneratedKeys="true">
+        insert into user_order
+        ( id,user_id,ad_po_id,time,is_invoice,delivery_num,
+        start_time,end_time,content,payment,pay_type,
+        create_time,update_time,is_deleted)
+        values (#{id},#{userId},#{adPoId},#{time},#{isInvoice},#{deliveryNum},
+        #{startTime},#{endTime},#{content},#{payment},#{payType},
+        #{createTime},#{updateTime},#{isDeleted})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.UserOrder" useGeneratedKeys="true">
+        insert into user_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="userId != null">user_id,</if>
+                <if test="adPoId != null">ad_po_id,</if>
+                <if test="time != null">time,</if>
+                <if test="isInvoice != null">is_invoice,</if>
+                <if test="deliveryNum != null">delivery_num,</if>
+                <if test="startTime != null">start_time,</if>
+                <if test="endTime != null">end_time,</if>
+                <if test="content != null">content,</if>
+                <if test="payment != null">payment,</if>
+                <if test="payType != null">pay_type,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="updateTime != null">update_time,</if>
+                <if test="isDeleted != null">is_deleted,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                <if test="userId != null">#{userId},</if>
+                <if test="adPoId != null">#{adPoId},</if>
+                <if test="time != null">#{time},</if>
+                <if test="isInvoice != null">#{isInvoice},</if>
+                <if test="deliveryNum != null">#{deliveryNum},</if>
+                <if test="startTime != null">#{startTime},</if>
+                <if test="endTime != null">#{endTime},</if>
+                <if test="content != null">#{content},</if>
+                <if test="payment != null">#{payment},</if>
+                <if test="payType != null">#{payType},</if>
+                <if test="createTime != null">#{createTime},</if>
+                <if test="updateTime != null">#{updateTime},</if>
+                <if test="isDeleted != null">#{isDeleted},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ad.web.entity.UserOrder">
+        update user_order
+        <set>
+                <if test="userId != null">
+                    user_id = #{userId},
+                </if>
+                <if test="adPoId != null">
+                    ad_po_id = #{adPoId},
+                </if>
+                <if test="time != null">
+                    time = #{time},
+                </if>
+                <if test="isInvoice != null">
+                    is_invoice = #{isInvoice},
+                </if>
+                <if test="deliveryNum != null">
+                    delivery_num = #{deliveryNum},
+                </if>
+                <if test="startTime != null">
+                    start_time = #{startTime},
+                </if>
+                <if test="endTime != null">
+                    end_time = #{endTime},
+                </if>
+                <if test="content != null">
+                    content = #{content},
+                </if>
+                <if test="payment != null">
+                    payment = #{payment},
+                </if>
+                <if test="payType != null">
+                    pay_type = #{payType},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime},
+                </if>
+                <if test="updateTime != null">
+                    update_time = #{updateTime},
+                </if>
+                <if test="isDeleted != null">
+                    is_deleted = #{isDeleted},
+                </if>
+        </set>
+        where   id = #{id} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ad.web.entity.UserOrder">
+        update user_order
+        set 
+            user_id =  #{userId},
+            ad_po_id =  #{adPoId},
+            time =  #{time},
+            is_invoice =  #{isInvoice},
+            delivery_num =  #{deliveryNum},
+            start_time =  #{startTime},
+            end_time =  #{endTime},
+            content =  #{content},
+            payment =  #{payment},
+            pay_type =  #{payType},
+            create_time =  #{createTime},
+            update_time =  #{updateTime},
+            is_deleted =  #{isDeleted}
+        where   id = #{id} 
+    </update>
+    <update id="orderInvoice">
+        update user_order
+        set
+            is_invoice = 1
+        where id=#{userId} and is_deleted = 0
+    </update>
+</mapper>

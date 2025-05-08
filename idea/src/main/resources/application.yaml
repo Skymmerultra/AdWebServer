@@ -1,0 +1,29 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+      enabled: true
+  application:
+    name: AdWeb
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/adweb
+    username: root
+    password: 123456
+    type: com.zaxxer.hikari.HikariDataSource
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+minio:
+  endpoint: http://192.168.116.101:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket-name: hello-minio
+
+
+
+

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ad.web.mapper.UserFavoritesAdMapper">
+
+    <resultMap id="BaseResultMap" type="com.ad.web.entity.UserFavoritesAd">
+            <id property="id" column="id" />
+            <result property="userId" column="user_id" />
+            <result property="adPoId" column="ad_po_id" />
+            <result property="createTime" column="create_time" />
+            <result property="updateTime" column="update_time" />
+            <result property="isDeleted" column="is_deleted" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,ad_po_id,create_time,update_time,is_deleted
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user_favorites_ad
+        where  id = #{id} 
+    </select>
+    <select id="getFavorAdPoIdByUserId" resultType="java.lang.Long">
+        select ad_po_id
+        from user_favorites_ad
+        where user_id = #{userId} and is_deleted = 0
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from user_favorites_ad
+        where  id = #{id} 
+    </delete>
+    <update id="deleteFavorByUserIdAndAdPoId">
+        update user_favorites_ad
+        set is_deleted = 1,update_time = now()
+        where user_id = #{userId} and ad_po_id = #{adPoId} and is_deleted = 0
+    </update>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.UserFavoritesAd" useGeneratedKeys="true">
+        insert into user_favorites_ad
+        ( id,user_id,ad_po_id,create_time,update_time,is_deleted)
+        values (null,#{userId},#{adPoId},Now(),null,0)
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.UserFavoritesAd" useGeneratedKeys="true">
+        insert into user_favorites_ad
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="userId != null">user_id,</if>
+                <if test="adPoId != null">ad_po_id,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="updateTime != null">update_time,</if>
+                <if test="isDeleted != null">is_deleted,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                <if test="userId != null">#{userId},</if>
+                <if test="adPoId != null">#{adPoId},</if>
+                <if test="createTime != null">#{createTime},</if>
+                <if test="updateTime != null">#{updateTime},</if>
+                <if test="isDeleted != null">#{isDeleted},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ad.web.entity.UserFavoritesAd">
+        update user_favorites_ad
+        <set>
+                <if test="userId != null">
+                    user_id = #{userId},
+                </if>
+                <if test="adPoId != null">
+                    ad_po_id = #{adPoId},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime},
+                </if>
+                <if test="updateTime != null">
+                    update_time = #{updateTime},
+                </if>
+                <if test="isDeleted != null">
+                    is_deleted = #{isDeleted},
+                </if>
+        </set>
+        where   id = #{id} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ad.web.entity.UserFavoritesAd">
+        update user_favorites_ad
+        set 
+            user_id =  #{userId},
+            ad_po_id =  #{adPoId},
+            create_time =  #{createTime},
+            update_time =  #{updateTime},
+            is_deleted =  #{isDeleted}
+        where   id = #{id} 
+    </update>
+</mapper>
