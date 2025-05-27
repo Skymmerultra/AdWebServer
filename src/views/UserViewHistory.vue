@@ -1,14 +1,14 @@
 <template>
     <el-container class="user-container">
       <!-- 左侧栏 -->
-      <el-aside class="sidebar" width="200px" position="fixed">
+      <el-aside class="sidebar" width="200px">
         <UserSidebar/>
       </el-aside>
   
       <!-- 右侧内容 -->
       <el-container>
-        <el-header> <div class="main-header"><SearchBox
-                                              @search="search"/></div></el-header>
+        <el-header height="70px"> <div class="main-header"><SearchBox
+                                                            @search="search"/></div></el-header>
         <el-main>
           <el-scrollbar>
             <div class="card-grid" >
@@ -40,22 +40,19 @@
     },
     methods:{
       search(query){
-        axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/collection/adPo?keyWord=${query}`)
+        const userId = this.$store.getters.getUserId;
+        axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/user/findHistories?keyWord=${query}&userId=${userId}`)
         .then(response => {
           this.adInfos=response.data.data
         })
       }
     },
-    created(){
-      axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/favorites/1")
+    mounted(){
+      axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/history/${this.$store.getters.getUserId}")
       .then(response => {
         this.adInfos=response.data.data;
         // console.log(this.adInfos);
       })
-      .catch(error => {
-      console.error('API 请求失败', error);
-      });
-
     }
 }
   </script>
@@ -68,6 +65,7 @@
   .sidebar {
   }
   
+  
  .main-header{
     top: 0;
     width:100%;
@@ -78,6 +76,7 @@
     padding:5px;
   }
   .card-grid {
+      max-height: 100%;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       /* 上下距离，左右距离 */

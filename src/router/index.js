@@ -25,9 +25,19 @@ const routes = [
     component:() => import('../views/UserCollection.vue')
   },
   {
+    path:'/user/viewhistory',
+    name:'userviewhistory',
+    component:() => import('../views/UserViewHistory.vue')
+  },
+  {
     path:'/addetail/:adId',
     name:'addetail',
     component:() => import('../views/AdDetail.vue')
+  },
+  {
+    path:'/adcase',
+    name:'adcase',
+    component:() => import('../views/AdWarehouse.vue')
   }
 ]
 

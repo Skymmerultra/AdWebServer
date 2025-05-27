@@ -5,27 +5,36 @@
         v-model="searchQuery"
         placeholder="搜索内容"
         class="search-input"
+        @change="search"
       />
     </div>
 </template>
   
 <script>
   export default {
+    // props:{
+    //   searchBox_visible:Boolean
+    // },
     name: 'SearchBox',
     data() {
       return {
-        searchQuery: ''
+        searchQuery:'',
+        searchBox_visible:true
       }
-    }
+    },
+    methods:{
+      search(){
+        this.$emit('search',this.searchQuery)
+      },
+    },
   }
 </script>
   
 <style scoped>
-  .search-box {
-    position: relative;
-    float: right;
-  }
   
+  .search-box{
+    height:50px;
+  }
   .search-input {
     height: 40px;
     width: 240px;

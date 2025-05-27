@@ -1,13 +1,9 @@
 <template>
+  <div class="user-view">
     <el-container class="user-container">
       <!-- 左侧栏 -->
       <el-aside class="sidebar" width="200px">
-        <el-menu default-active="1" class="user-menu" @select="handleSelect">
-          <el-menu-item index="1">基本信息</el-menu-item>
-          <el-menu-item index="2">个人钱包</el-menu-item>
-          <el-menu-item index="3">个人收藏</el-menu-item>
-          <el-menu-item index="4">浏览历史</el-menu-item>
-        </el-menu>
+        <UserSidebar/>
       </el-aside>
   
       <!-- 右侧内容 -->
@@ -76,8 +72,10 @@
             </el-button>
         </div>
       </el-main>
+    </el-container>
+  </div>
 
-      <el-dialog v-model="information_dialogVisable" @close="close_informationDialog">
+    <el-dialog v-model="information_dialogVisable" @close="close_informationDialog" center>
         <el-form :model="changeduserInfo" label-width="70px">
           <el-form-item label="用户名:">
             <el-input v-model="changeduserInfo.username" clearable/>
@@ -103,7 +101,7 @@
         </el-form>
       </el-dialog>
 
-      <el-dialog v-model="password_dialogVisable" @close="resetPassword">
+    <el-dialog v-model="password_dialogVisable" @close="resetPassword" center>
         <el-form :model="passwordForm" :rules="rules" ref="changePassword">
         <el-form-item label="请输入原密码" prop="oldPassword" label-position="top">
             <el-input v-model="passwordForm.oldPassword"></el-input>
@@ -119,12 +117,15 @@
         </el-form-item>
       </el-form>
       </el-dialog>
-    </el-container>
 </template>
   
   <script>
   import axios from 'axios';
+  import UserSidebar from '@/components/UserSidebar.vue';
   export default {
+    components:{
+      UserSidebar
+    },
     data() {
       // const validOldpassword = (rule,value,callback) => {
       //   const validOldform = {
@@ -179,17 +180,6 @@
       };
     },
     methods:{
-      handleSelect(index){
-        if(index=="1"){
-          this.$router.push({ name: 'userview' });
-        }
-        else if(index=="2"){
-          this.$router.push({name:'userwallet'});
-        }
-        else if(index=="3"){
-          this.$router.push({name:'usercollection'})
-        }
-      },
       logout(){
         this.$store.dispatch('logout');
         this.$router.push({name:'home'});
@@ -198,17 +188,13 @@
       //  // 触发按钮失去焦点，清除高亮状态
       // event.target.blur();
       // },
-      open_changeInformation(event){
-          event.target.blur();
+      open_changeInformation(){
           this.information_dialogVisable=true;
           this.changeduserInfo.username=this.userInfo.username;
           this.changeduserInfo.sex=this.userInfo.sex;
           this.changeduserInfo.phone=this.userInfo.phone;
           this.changeduserInfo.address=this.userInfo.address;
           this.changeduserInfo.email=this.userInfo.email;
-      },
-      close_informationDialog(){
-        this.isActive=false;
       },
       changeInformation_confirm(){
         axios.put(`https://m1.apifoxmock.com/m1/6267385-5961501-default/changeinformation`,this.changeduserInfo)
@@ -218,8 +204,7 @@
           }
         })
       },
-      open_changePassword(event){
-        event.target.blur();
+      open_changePassword(){
         this.password_dialogVisable=true;
       },
       validcheckPassword(rule,value,callback) {
@@ -280,23 +265,22 @@
   </script>
   
   <style scoped>
+
+  .user-view{
+    width:100%;
+    height:95vh;
+  }
   .user-container {
-    height: 100vh;  
+    width:100%;
+    height: 95vh;  
+    display: flex;
+    flex-direction: row;
   }
-  
   .sidebar {
-    background-color: #b9b5b5;
-    /* 内边距 */
-    padding: 20px;
-  }
-  
-  /* 菜单项样式 */
-  .user-menu .el-menu-item {
-    font-size: 16px;  /* 设置菜单项的字体大小 */
   }
   
   /* 主体内容区域样式 */
-.main-content {
+  .main-content {
     display: flex;
     /* 主轴为垂直方向 */
     flex-direction: column;
@@ -304,9 +288,8 @@
     justify-content: center;
     /* 集中在交叉轴中央方向显示 */
     align-items: center;
-    height: 100vh;
     text-align: center; 
-    gap:40px/*调整上下间距*/
+    gap:20px/*调整上下间距*/
 }
 
 .avatar-image {
@@ -322,14 +305,23 @@
   font-size: 16px;
   padding: 10px 10px;
 }
-.button{
-    color: rgb(22, 99, 72);
-    width:500px;
-    font-size: 16px;
+.button {
+    color: rgb(22, 99, 72);  /* 按钮文字颜色 */
+    width: 500px;  /* 按钮宽度 */
+    font-size: 16px;  /* 字体大小 */
+    background-color: #ffffff;  /* 默认背景色 */
+    border: 2px solid rgb(22, 99, 72);  /* 默认边框颜色 */
+    padding: 10px 20px;  /* 增加内边距 */
+    border-radius: 4px;  /* 圆角边框 */
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;  /* 平滑过渡 */
 }
-.button:hover{
-  color:rgb(73, 42, 168)
+
+.button:hover {
+    color: rgb(255, 255, 255);  /* 悬停时文字颜色变为白色 */
+    background-color: rgb(121, 191, 193);  /* 悬停时背景色变为紫色 */
+    border-color: rgb(73, 42, 168);  /* 悬停时边框颜色变为紫色 */
 }
+
 
   </style>
   

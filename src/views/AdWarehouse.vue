@@ -1,0 +1,163 @@
+<template>
+  <div class="home-view">
+    <el-container class="home-container">
+        <el-header height="100px" class="header"><AppHeader
+                                                  @search="search"
+                                                  @reload="reload"/></el-header>
+        <el-container class="header-under">
+            <el-aside class="aside">
+                <el-menu
+                class="adcase-menu"
+                :default-active="active_index"
+                @select="handleSelect"
+                defau>
+                <el-menu-item index="4">全部广告</el-menu-item>
+                <el-menu-item index="3">投递结束</el-menu-item>
+                <el-menu-item index="2">正在投递</el-menu-item>
+                <el-menu-item index="1">正在审核</el-menu-item>
+                </el-menu>
+            </el-aside>
+            <el-main class="main">
+                <div class="ad-display">
+                  
+                        <adShowCard v-for="(adInfo, index) in adInfos" 
+                              :key="index"
+                              :adInfo="adInfo"></adShowCard>
+          
+                </div>
+            </el-main>
+        </el-container>
+    </el-container>
+  </div>
+</template>
+
+
+<script>
+import axios from 'axios'
+import AppHeader from "../components/AppHeader.vue"
+import adShowCard from "@/components/adShowCard.vue"
+import { throttle } from 'lodash';
+export default{
+    components:{
+    AppHeader,
+    adShowCard,
+    },
+    data(){
+        return {
+            id:this.$store.getters.getUserId,
+            adInfos:[],
+            active_index:"4",
+
+            fetchAllData: throttle(function() {
+                axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/adhouse/${this.id}`)
+                .then(response => {
+                this.adInfos = response.data.data;})  
+            }, 1000),
+      
+            fetchBackData: throttle(function() {
+              // 这里是 fetchBackData 的具体逻辑
+            }, 1000),
+      
+            fetchMidData: throttle(function() {
+              // 这里是 fetchMidData 的具体逻辑
+            }, 1000),
+      
+            fetchFrontData: throttle(function() {
+              axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/adhouse/front/${this.id}`)
+              .then(response => {
+              this.adInfos = response.data.data;})
+            }, 1000),
+        }
+    },
+    methods:{
+        // fetchAllData(){
+        //   axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/adhouse/${this.id}`)
+        //   .then(response => {
+        //     this.adInfos = response.data.data;
+        //   })
+
+        // },
+        // //查找正在审核的广告
+        // fetchFrontData(){
+          
+        // },
+        // fetchMidData(){
+
+        // },
+        // fetchBackData(){
+
+        // },
+        handleSelect(index){
+            if (this.active_index === index) {
+                return;  // 点击无反应
+            }
+            if(index == "4"){
+                this.fetchAllData()
+                this.active_index = "4"
+            }
+            else if(index == "3"){
+                this.fetchBackData()
+                this.active_index = "3"
+            }
+            else if(index == '2'){
+                this.fetchMidData()
+                this.active_index = "2"
+            }
+            else if(index == '1'){
+                this.fetchFrontData()
+                this.active_index = "1"
+            }
+        },
+    },
+    mounted(){
+        this.fetchAllData();
+    }
+
+
+}
+</script>
+
+<style scoped>
+.home-view{
+    width:100%;
+    height: 100vh;
+  }
+  .home-container{
+    width:100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .head-under{
+    display: flex;
+    flex-direction: row;
+  }
+  .header{
+    width:100%;
+    padding: 0;
+  }
+  .aside{
+    width:150px;
+  }
+  .adcase-menu{
+    width:150px;
+    position: fixed;
+    border: 1px solid #cf4040;
+    background-color: #ffffff;
+    position: fixed;
+    --el-menu-active-color:#e51111;
+  }
+  .el-menu-item {
+    transition: transform 0.3s ease, color 0.3s ease;
+    text-align: center;
+  }
+
+  .el-menu-item:hover {
+    color: #e51111; 
+    transform: translateY(-3px);
+  }
+ .ad-display {
+    display:grid;
+    grid-template-columns: repeat(1, 1fr);
+ }
+</style>

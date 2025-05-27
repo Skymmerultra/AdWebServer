@@ -1,10 +1,13 @@
 <template>
   <div class="app-header">
     <nav class="nav-section">
-      <a href="#" class="nav-link" :class="{ active: currentPage === 'HomeView' }">首页</a>
+      <a href="#" class="nav-link" :class="{ active: currentPage === 'HomeView' }" @click="reload">首页</a>
+      <a href="#/adcase" class="nav-link">广告仓库</a>
     </nav>
     <div class="right-section">
-      <SearchBox />
+      <SearchBox 
+      @search="search"
+      v-show="searchBox_visible"/>
       <LoginButton v-if="!isReplaced" @login="replaceIcon"/>
       <AvatarIcon v-if="isReplaced"/>
     </div>
@@ -18,6 +21,12 @@ import AvatarIcon from './AvatarIcon.vue';
 
 export default {
   name: 'AppHeader',
+  props:{
+    searchBox_visible:{
+      type:Boolean,
+      default:true
+    }
+  },
   components:{
     LoginButton,
     SearchBox,
@@ -31,9 +40,17 @@ export default {
   },
   data() {
     return {
-      
+     
     };
   },
+  methods:{
+    search(query){
+      this.$emit('search',query)
+    },
+    reload(){
+      this.$emit('reload')
+    }
+  }
 };
 </script>
 
@@ -75,7 +92,7 @@ export default {
 
 .nav-link.active {
   background-color: #e5e7eb;
-  color: #1f2937;
+  color: #aa3b39;
   font-weight: 600;
 }
 

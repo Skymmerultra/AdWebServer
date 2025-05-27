@@ -2,17 +2,19 @@
   <el-card class="ad-card" @click="handleCardClick">
     <template #header>
       <div class="card-title">
-       <span>{{ adInfo.information.name }}</span>
-       <span>  <i class="far fa-hand-point-up" />{{ adInfo.information.clickNum }}</span>
+       <span>{{ adInfo?.information?.name }}</span>
+       <span>  <i class="far fa-hand-point-up" />{{ adInfo?.information?.clickNum }}</span>
       </div>    
     </template>
+    <div class="card-content">{{ adInfo?.information?.content }}</div>
+
+    <div class="line"></div>
+
       <img class="ad-image"
-          :src="adInfo.image_src[0]"
+          :src="adInfo?.image_src[0]"
           alt="image"
       />
-    <template #footer>
-      <div class="card-content">{{ adInfo.information.content }}</div>
-    </template>
+      
   </el-card>
 </template>
 
@@ -41,8 +43,14 @@ export default {
   },
   methods: {
     handleCardClick() {
-      //根据广告id增加广告点击量
-      axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/adpo/ClickIncrement/${this.adId")
+      //根据广告id增加广告点击量,同时记录用户浏览行为
+      axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/adpo/ClickIncrement/${this.adId}")
+      axios.post("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/viewIncrement",
+        {
+          userId:this.$store.getters.getUserID,
+          adPoId:this.adId
+        }
+      )
       this.$router.push({ name:'addetail', params: { adId: this.adId } }) ;
     },
   },
@@ -59,8 +67,13 @@ export default {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 500px;
-  max-height: 650px;
+  width: 350px;
+  height: 400px;
+}
+
+/* 使用深度选择器穿透组件作用域 */
+.ad-card :deep(.el-card__header) {
+  height: 50px; /* 强制 header 高度 */
 }
 
 .ad-card:hover {
@@ -72,19 +85,21 @@ export default {
   display:flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.ad-image{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.card-title {
   font-size: 16px;
   font-weight: 600;
   color: #1f2937;
-  padding: 10px;
+}
+
+.ad-image{
+  max-width:100%;
+  object-fit: cover;
+}
+.line{
+  width:100%;
+  height:0;
+  border: 1px solid #888282;
+  margin-top:3px;
+  margin-bottom:3px;
 }
 
 .card-content {

@@ -1,6 +1,7 @@
 <template>
   <div class="ad-detail-view">
-  <div class="ad-detail-header"><AppHeader/></div>
+  <div class="ad-detail-header"><AppHeader
+                                :search-box_visible="false"/></div>
   <div class="ad-detail-container">
     <!-- 走马灯展示图片 -->
     <div class="left">
@@ -12,8 +13,13 @@
     </div>
 
     <div class="right">
-      <h1 >{{ adInfo?.information?.name }}</h1>
-
+      <div class="title">
+      <h1 >{{ adInfo?.information?.name }} <span>
+        <CollectIcon
+          :adPoId=this.adId
+          />
+      </span></h1>
+      </div>
       <u class="adInfo-content">{{ adInfo?.information?.content }}</u>
 
       <el-descriptions 
@@ -44,7 +50,9 @@
 
 
       <p class="ad-price"><strong>售价: </strong><u>￥{{ adInfo?.information?.price}}</u></p>
-      <el-button type="warning" size="large" @click="purchase">立即购买</el-button>
+
+      <el-button type="warning" size="large" @click="purchase" v-show="!isPurchased">立即购买</el-button>
+      
     </div>
 
     <el-dialog 
@@ -119,11 +127,13 @@
 <script>
 import axios from 'axios';
 import AppHeader from '../components/AppHeader.vue';
+import CollectIcon from '@/components/CollectIcon.vue';
 import {ElMessage} from 'element-plus';
 import { ElMessageBox } from 'element-plus';
 export default {
   components:{
     AppHeader,
+    CollectIcon
   },
   computed:{
     isLoggedIn(){

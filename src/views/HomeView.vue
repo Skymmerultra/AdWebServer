@@ -1,7 +1,9 @@
 <template>
   <div class="home-view">
     <el-container class="home-container">
-        <el-header height="100px" class="header"><AppHeader/></el-header>
+        <el-header height="100px" class="header"><AppHeader
+                                                  @search="search"
+                                                  @reload="reload"/></el-header>
         <el-container class="header-under">
             <el-aside class="aside"><CategoryMenu/></el-aside>
             <el-main class="main">
@@ -19,7 +21,7 @@
 <script>
     import AppHeader from '../components/AppHeader.vue';
     import CategoryMenu from '../components/CategoryMenu.vue';
-    import AdCard from '../components/AdCard.vue'
+    import AdCard from '../components/AdPoCard.vue'
     import axios from 'axios'
 
     export default{
@@ -34,13 +36,27 @@
           }
         },
         mounted() {
-          axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/homeview")
-          .then(response => {
-          this.adInfos = response.data.data
-          })
-          .catch(error => {
-          console.error("Error fetching ad data:", error);
-          });
+          this.fetchClickNumMaxData()
+        },
+        methods:{
+          fetchClickNumMaxData(){
+            axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/homeview")
+            .then(response => {
+            this.adInfos = response.data.data
+            })
+            .catch(error => {
+            console.error("Error fetching ad data:", error);
+            });
+          },
+          search(query){
+            axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/homeview/adPo?keyWord=${query}`)
+            .then(response => {
+              this.adInfos = response.data.data
+            })
+          },
+          reload(){
+             this.fetchClickNumMaxData()
+          }
         }
     }
 </script>
@@ -67,16 +83,11 @@
   .aside{
     width:150px;
   }
-  .main{
-    overflow-y: auto;  /* 开启垂直滚动 */
-    padding:20px;
-  }
   .card-grid {
     max-height: 100%;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 50px 24px;
-    /* padding: 20px; */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px 10px;
   }
   /* 屏幕宽度较小时改为竖直排列 */
   @media (max-width: 768px) {
