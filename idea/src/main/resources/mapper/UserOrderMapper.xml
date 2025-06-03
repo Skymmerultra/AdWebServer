@@ -22,71 +22,59 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_id,ad_po_id,time,is_invoice,delivery_num,
-        start_time,end_time,content,payment,pay_type,
-        create_time,update_time,is_deleted
+        id,user_id,ad_po_id,time,is_checked,is_invoice,delivery_num,
+        start_time,end_time,content,payment,pay_type
     </sql>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.UserOrder" useGeneratedKeys="true">
+        insert into user_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="adPoId != null">ad_po_id,</if>
+            <if test="time != null">time,</if>
+            <if test="isChecked != null">is_checked,</if>
+            <if test="isInvoice != null">is_invoice,</if>
+            <if test="deliveryNum != null">delivery_num,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="content != null and content !=''">content,</if>
+            <if test="payment != null">payment,</if>
+            <if test="payType != null and payType != ''">pay_type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+        </trim>
 
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
-        from user_order
-        where  id = #{id} and is_deleted = 0
-    </select>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="adPoId != null">#{adPoId},</if>
+            <if test="time != null">#{time},</if>
+            <if test="isChecked != null">#{isChecked},</if>
+            <if test="isInvoice != null">#{isInvoice},</if>
+            <if test="deliveryNum != null">#{deliveryNum},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="content != null and content !=''">#{content},</if>
+            <if test="payment != null">#{payment},</if>
+            <if test="payType != null and payType != ''">#{payType},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+        </trim>
+    </insert>
+
     <select id="getOrderByUserId" resultType="com.ad.web.entity.UserOrder">
         select <include refid="Base_Column_List"/>
         from user_order
         where user_id = #{userId} and is_deleted = 0
     </select>
+    <select id="selectByPrimaryKey" resultType="com.ad.web.entity.UserOrder">
+        select <include refid="Base_Column_List"/>
+        from user_order
+        where id = #{id} and is_deleted = 0
+    </select>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete from user_order
-        where  id = #{id} 
-    </delete>
-    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.UserOrder" useGeneratedKeys="true">
-        insert into user_order
-        ( id,user_id,ad_po_id,time,is_invoice,delivery_num,
-        start_time,end_time,content,payment,pay_type,
-        create_time,update_time,is_deleted)
-        values (#{id},#{userId},#{adPoId},#{time},#{isInvoice},#{deliveryNum},
-        #{startTime},#{endTime},#{content},#{payment},#{payType},
-        #{createTime},#{updateTime},#{isDeleted})
-    </insert>
-    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.UserOrder" useGeneratedKeys="true">
-        insert into user_order
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="id != null">id,</if>
-                <if test="userId != null">user_id,</if>
-                <if test="adPoId != null">ad_po_id,</if>
-                <if test="time != null">time,</if>
-                <if test="isInvoice != null">is_invoice,</if>
-                <if test="deliveryNum != null">delivery_num,</if>
-                <if test="startTime != null">start_time,</if>
-                <if test="endTime != null">end_time,</if>
-                <if test="content != null">content,</if>
-                <if test="payment != null">payment,</if>
-                <if test="payType != null">pay_type,</if>
-                <if test="createTime != null">create_time,</if>
-                <if test="updateTime != null">update_time,</if>
-                <if test="isDeleted != null">is_deleted,</if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="id != null">#{id},</if>
-                <if test="userId != null">#{userId},</if>
-                <if test="adPoId != null">#{adPoId},</if>
-                <if test="time != null">#{time},</if>
-                <if test="isInvoice != null">#{isInvoice},</if>
-                <if test="deliveryNum != null">#{deliveryNum},</if>
-                <if test="startTime != null">#{startTime},</if>
-                <if test="endTime != null">#{endTime},</if>
-                <if test="content != null">#{content},</if>
-                <if test="payment != null">#{payment},</if>
-                <if test="payType != null">#{payType},</if>
-                <if test="createTime != null">#{createTime},</if>
-                <if test="updateTime != null">#{updateTime},</if>
-                <if test="isDeleted != null">#{isDeleted},</if>
-        </trim>
-    </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.ad.web.entity.UserOrder">
         update user_order
         <set>

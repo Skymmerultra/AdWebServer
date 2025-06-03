@@ -49,18 +49,18 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="UserRecharge" />
-                  <option name="tableName" value="user_recharge" />
+                  <option name="className" value="Admin" />
+                  <option name="tableName" value="admin_info" />
                 </TableUIInfo>
               </list>
             </option>
-            <option name="templatesName" value="default-all" />
+            <option name="templatesName" value="default-empty" />
             <option name="useLombokPlugin" value="true" />
           </GenerateConfig>
         </option>
         <option name="moduleName" value="AdWeb1" />
         <option name="projectPath" value="$PROJECT_DIR$" />
-        <option name="templateName" value="default-all" />
+        <option name="templateName" value="default-empty" />
       </TemplateContext>
     </option>
   </component>

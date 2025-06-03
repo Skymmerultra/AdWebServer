@@ -1,6 +1,5 @@
 package com.ad.web.service;
 
-import com.ad.web.entity.AdPo;
 import com.ad.web.entity.User;
 import com.ad.web.entity.UserOrder;
 import com.ad.web.entity.vo.adpo.AdPoVo;
@@ -18,12 +17,11 @@ public interface UserService {
 
     long login(String username,String password);
 
-
     void uploadOrUpdateUserAvatar(MultipartFile graph,Long userId) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException;
 
     User getUserById(Long userId);
 
-    void updateUSerInfo(User user);
+    void updateUserInfo(User user);
 
     List<UserOrder> getOrderByUserId(Long userId);
 
@@ -39,7 +37,13 @@ public interface UserService {
 
     void changepassword(String oldPassword,String newPassword, Long userId);
 
-    void favoriteIncrement(Long userId, Long adPoId);
+    void viewDecrement(Long userId, Long adPoId);
 
-    void favoriteDecrement(Long userId, Long adPoId);
+    boolean isFavorite(Long userId, Long adPoId);
+
+    List<AdPoVo> findFavorites(String keyWord,Long userId);
+
+    List<AdPoVo> findHistories(String keyWord, Long userId);
+
+    void favorite(Long userId, Long adPoId);
 }

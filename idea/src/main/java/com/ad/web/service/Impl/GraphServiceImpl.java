@@ -7,7 +7,7 @@ import com.ad.web.mapper.GraphMapper;
 import com.ad.web.service.FileService;
 import com.ad.web.service.GraphService;
 import io.minio.errors.*;
-import io.swagger.v3.oas.models.security.SecurityScheme;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,12 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class GraphServiceImpl implements GraphService {
 
     @Autowired
@@ -62,6 +62,23 @@ public class GraphServiceImpl implements GraphService {
             insertGraph(graph, itemType, itemId, url);
         }
         return url;
+    }
+
+    @Override
+    public Map<Long, List<Graph>> batchGetGraphUrlByAdPoIds(Integer itemType,List<Long> itemIds) {
+        if (itemIds == null || itemIds.isEmpty())return Map.of();
+        try {
+            // 去重处理
+            List<Long> distinctIds = itemIds.stream().distinct().toList();
+            List<Graph> graphs = graphMapper.getGraphListByTypeAndIds(itemType,distinctIds);
+            return graphs.stream()
+                    .collect(Collectors.groupingBy(
+                            Graph::getItemId
+                    ));
+        } catch (Exception e) {
+            log.error("error: {}",e.getMessage());
+            return Map.of();
+        }
     }
 
     private void insertGraph(MultipartFile graph, Integer itemType, Long itemId, String url) {

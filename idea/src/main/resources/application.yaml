@@ -24,6 +24,10 @@ minio:
   secret-key: minioadmin
   bucket-name: hello-minio
 
+adWeb:
+  indexChoseAdPoNum: 7 #首页搜索的点击量靠前的广告位数量
 
+server:
+  port: 8081
 
 

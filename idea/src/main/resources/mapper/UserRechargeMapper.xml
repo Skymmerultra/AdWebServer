@@ -35,8 +35,8 @@
         insert into user_recharge
         ( id,user_id,time,recharge_num,payment_type_id,create_time,
         update_time,is_deleted)
-        values (#{id},#{userId},#{time},#{rechargeNum},#{paymentTypeId},#{createTime},
-        #{updateTime},#{isDeleted})
+        values (null,#{userId},#{time},#{rechargeNum},#{paymentTypeId},now(),
+        null,0)
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.UserRecharge" useGeneratedKeys="true">
         insert into user_recharge

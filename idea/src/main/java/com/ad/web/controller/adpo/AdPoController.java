@@ -26,7 +26,7 @@ public class AdPoController {
         return Result.ok(result);
     }
 
-    @Operation(description = "获取点击次数前4个广告及其图片")
+    @Operation(description = "获取点击次数前7个广告及其图片")
     @GetMapping("getSomeAdPo")
     public Result<List<AdPoVo>> getSomeAdPoVoOrderByClickNum(){
         List<AdPoVo> result = adPoService.getSomeAdPoVoOrderByClickNum();

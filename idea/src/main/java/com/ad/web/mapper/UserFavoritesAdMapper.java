@@ -28,4 +28,10 @@ public interface UserFavoritesAdMapper {
     List<Long> getFavorAdPoIdByUserId(Long userId);
 
     int deleteFavorByUserIdAndAdPoId(Long userId, Long adPoId);
+
+    Long getFavorAdPoCount(Long userId, Long adPoId);
+
+    Long getFavorDeletedAdPoCount(Long userId, Long adPoId);
+
+    int updateFavorDelete(Long userId, Long adPoId);
 }

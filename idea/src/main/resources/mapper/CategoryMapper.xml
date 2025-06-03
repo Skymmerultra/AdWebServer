@@ -13,7 +13,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,create_time,update_time,is_deleted
+        id,name
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -26,6 +26,20 @@
         select id
         from category
         where name like concat('%',#{keyWord},'%') and is_deleted = 0
+    </select>
+
+    <resultMap id="categoryRelationMap" type="com.ad.web.entity.vo.category.CategoryRelation">
+        <result property="adPoId" column="adPoId"/>
+        <association property="category" column="id" select="com.ad.web.mapper.CategoryMapper.selectByPrimaryKey"/>
+    </resultMap>
+    <select id="batchSelectByAdPoIds" resultMap="categoryRelationMap">
+        select r.ad_po_id adPoId,c.*
+        from ad_po_category r
+        join category c on r.category_id = c.id
+        where r.ad_po_id in
+        <foreach collection="list" item="adPoId" open="(" close=")" separator=",">
+            #{adPoId}
+        </foreach>
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

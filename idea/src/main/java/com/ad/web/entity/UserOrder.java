@@ -38,6 +38,11 @@ public class UserOrder {
     private Date time;
 
     /**
+     * 是否审核
+     */
+    private Integer isChecked;
+
+    /**
      * 是否开发票
      */
     private Integer isInvoice;
@@ -109,6 +114,7 @@ public class UserOrder {
             && (this.getAdPoId() == null ? other.getAdPoId() == null : this.getAdPoId().equals(other.getAdPoId()))
             && (this.getTime() == null ? other.getTime() == null : this.getTime().equals(other.getTime()))
             && (this.getIsInvoice() == null ? other.getIsInvoice() == null : this.getIsInvoice().equals(other.getIsInvoice()))
+            && (this.getIsChecked() == null ? other.getIsChecked() == null : this.getIsChecked().equals(other.getIsChecked()))
             && (this.getDeliveryNum() == null ? other.getDeliveryNum() == null : this.getDeliveryNum().equals(other.getDeliveryNum()))
             && (this.getStartTime() == null ? other.getStartTime() == null : this.getStartTime().equals(other.getStartTime()))
             && (this.getEndTime() == null ? other.getEndTime() == null : this.getEndTime().equals(other.getEndTime()))
@@ -129,6 +135,7 @@ public class UserOrder {
         result = prime * result + ((getAdPoId() == null) ? 0 : getAdPoId().hashCode());
         result = prime * result + ((getTime() == null) ? 0 : getTime().hashCode());
         result = prime * result + ((getIsInvoice() == null) ? 0 : getIsInvoice().hashCode());
+        result = prime * result + ((getIsChecked() == null) ? 0 : getIsChecked().hashCode());
         result = prime * result + ((getDeliveryNum() == null) ? 0 : getDeliveryNum().hashCode());
         result = prime * result + ((getStartTime() == null) ? 0 : getStartTime().hashCode());
         result = prime * result + ((getEndTime() == null) ? 0 : getEndTime().hashCode());
@@ -152,6 +159,7 @@ public class UserOrder {
         sb.append(", adPoId=").append(adPoId);
         sb.append(", time=").append(time);
         sb.append(", isInvoice=").append(isInvoice);
+        sb.append(", isChecked=").append(isChecked);
         sb.append(", deliveryNum=").append(deliveryNum);
         sb.append(", startTime=").append(startTime);
         sb.append(", endTime=").append(endTime);

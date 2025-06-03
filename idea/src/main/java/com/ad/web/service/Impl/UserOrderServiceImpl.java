@@ -1,9 +1,11 @@
 package com.ad.web.service.Impl;
 
 import com.ad.web.entity.UserOrder;
+import com.ad.web.exception.AdWebException;
 import com.ad.web.mapper.UserOrderMapper;
 import com.ad.web.service.FileService;
 import com.ad.web.service.UserOrderService;
+import com.ad.web.service.UserService;
 import io.minio.errors.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ public class UserOrderServiceImpl implements UserOrderService {
     @Autowired
     private FileService fileService;
     @Autowired
+    private UserService userService;
+    @Autowired
     private UserOrderMapper userOrderMapper;
 
     @Override
@@ -37,6 +41,10 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     @Override
     public void createOrder(MultipartFile file, Long userId, Long adPoId, Integer isInvoice, Integer deliveryNum, Date startTime, Date endTime,Integer payment,String payType) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        Integer userBalance = userService.getBalanceById(userId);
+        if (userBalance < payment){
+            throw new AdWebException(404,"用户余额不足");
+        }
 
         String content = fileService.upload(file);
 
@@ -44,7 +52,7 @@ public class UserOrderServiceImpl implements UserOrderService {
             payType = DefaultPayType;
         }
 
-        UserOrder order = new UserOrder(null,userId,adPoId,new Date(),isInvoice,deliveryNum,startTime,endTime,content,payment,payType,new Date(),null,0);
+        UserOrder order = new UserOrder(null,userId,adPoId,new Date(),null,isInvoice,deliveryNum,startTime,endTime,content,payment,payType,new Date(),null,0);
         userOrderMapper.insertSelective(order);
 
     }

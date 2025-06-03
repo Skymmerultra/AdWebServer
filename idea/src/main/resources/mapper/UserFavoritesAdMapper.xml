@@ -8,6 +8,7 @@
             <id property="id" column="id" />
             <result property="userId" column="user_id" />
             <result property="adPoId" column="ad_po_id" />
+            <result property="time" column="time" />
             <result property="createTime" column="create_time" />
             <result property="updateTime" column="update_time" />
             <result property="isDeleted" column="is_deleted" />
@@ -27,6 +28,17 @@
         select ad_po_id
         from user_favorites_ad
         where user_id = #{userId} and is_deleted = 0
+        order by `time` desc
+    </select>
+    <select id="getFavorAdPoCount" resultType="java.lang.Long">
+        select count(*)
+        from user_favorites_ad
+        where user_id = #{userId} and is_deleted = 0 and ad_po_id = #{adPoId}
+    </select>
+    <select id="getFavorDeletedAdPoCount" resultType="java.lang.Long">
+        select count(*)
+        from user_favorites_ad
+        where user_id = #{userId} and is_deleted = 1 and ad_po_id = #{adPoId}
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -40,8 +52,8 @@
     </update>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.UserFavoritesAd" useGeneratedKeys="true">
         insert into user_favorites_ad
-        ( id,user_id,ad_po_id,create_time,update_time,is_deleted)
-        values (null,#{userId},#{adPoId},Now(),null,0)
+        ( id,user_id,ad_po_id,time,create_time,update_time,is_deleted)
+        values (null,#{userId},#{adPoId},#{time},Now(),null,0)
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ad.web.entity.UserFavoritesAd" useGeneratedKeys="true">
         insert into user_favorites_ad
@@ -92,5 +104,12 @@
             update_time =  #{updateTime},
             is_deleted =  #{isDeleted}
         where   id = #{id} 
+    </update>
+    <update id="updateFavorDelete">
+        update user_favorites_ad
+        set
+            update_time = now(),
+            is_deleted = 0
+        where   user_id = #{userId} and ad_po_id = #{adPoId} and is_deleted = 1
     </update>
 </mapper>

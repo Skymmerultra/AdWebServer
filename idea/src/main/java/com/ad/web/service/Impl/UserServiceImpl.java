@@ -1,15 +1,11 @@
 package com.ad.web.service.Impl;
 
 import com.ad.web.common.Enum.GraphType;
-import com.ad.web.common.result.ResultCodeEnum;
 import com.ad.web.entity.*;
 import com.ad.web.entity.vo.adpo.AdPoVo;
 import com.ad.web.entity.vo.user.RechargeVo;
 import com.ad.web.exception.AdWebException;
-import com.ad.web.mapper.UserFavoritesAdMapper;
-import com.ad.web.mapper.UserMapper;
-import com.ad.web.mapper.UserOrderMapper;
-import com.ad.web.mapper.UserViewAdMapper;
+import com.ad.web.mapper.*;
 import com.ad.web.service.AdPoService;
 import com.ad.web.service.GraphService;
 import com.ad.web.service.UserService;
@@ -25,7 +21,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Slf4j
@@ -48,11 +43,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserFavoritesAdMapper userFavoritesAdMapper;
 
+    @Autowired
+    private UserRechargeMapper rechargeMapper;
+    @Autowired
+    private AdPoMapper adPoMapper;
+
     @Override
     public void register(String username,String password) {
         User userResult = userMapper.getUserByName(username);
         if (userResult != null){
-            throw new AdWebException(ResultCodeEnum.USER_ACCOUNT_EXIST_ERROR);
+            throw new AdWebException(404,"账号已存在");
         }
         User user = new User();
         user.setUsername(username);
@@ -65,10 +65,10 @@ public class UserServiceImpl implements UserService {
     public long login(String username,String password) {
         User userResult = userMapper.getUserByName(username);
         if (userResult == null){
-            throw new AdWebException(ResultCodeEnum.USER_ACCOUNT_NOT_EXIST_ERROR);
+            throw new AdWebException(404,"账号不存在");
         }
         if (!DigestUtils.md5Hex(password).equals(userResult.getPassword())){
-            throw new AdWebException(ResultCodeEnum.USER_ACCOUNT_PASSWORD_ERROR);
+            throw new AdWebException(404,"密码错误");
         }
         return userResult.getId();
     }
@@ -89,10 +89,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUSerInfo(User user) {
+    public void updateUserInfo(User user) {
         User userResult = userMapper.getUserByName(user.getUsername());
         if (userResult != null){
-            throw new AdWebException(ResultCodeEnum.USER_ACCOUNT_EXIST_ERROR);
+            throw new AdWebException(404,"用户名已存在");
         }
         user.setUpdateTime(new Date());
         userMapper.updateByPrimaryKeySelective(user);
@@ -110,39 +110,46 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<AdPoVo> getViewHistoryById(Long userId) {
-        List<AdPo> adPoList = userViewAdMapper.getViewAdPoIdByUserId(userId)
-                .stream()
-                .map(adPoId -> adPoService.getAdPoById(adPoId))
-                .toList();
+        List<AdPo> adPoList = adPoMapper.getViewHistoryByUserid(userId);
         return adPoService.adPoListToVoList(adPoList);
     }
 
     @Override
     public List<AdPoVo> getFavoritesById(Long userId) {
-        List<AdPo> adPoVoList = userFavoritesAdMapper.getFavorAdPoIdByUserId(userId)
-                .stream()
-                .map(adPoId -> adPoService.getAdPoById(adPoId))
-                .toList();
+//        List<AdPo> adPoVoList = adPoService.getAdPoListByIds(userFavoritesAdMapper.getFavorAdPoIdByUserId(userId));
+        List<AdPo> adPoVoList = adPoMapper.getFavoritesByUserid(userId);
         return adPoService.adPoListToVoList(adPoVoList);
     }
 
+
     @Override
     public void recharge(RechargeVo rechargeVo) {
+        UserRecharge userRecharge = new UserRecharge(null,rechargeVo.getId(),new Date(),rechargeVo.getRechargeNum(),1L,null,null,null);
+        rechargeMapper.insert(userRecharge);
         userMapper.recharge(rechargeVo.getId(),rechargeVo.getRechargeNum());
     }
 
     @Override
     public void viewIncrement(Long userId, Long adPoId) {
-        List<Long> viewAdPoIdByUserId = userViewAdMapper.getViewAdPoIdByUserId(userId);
-        if (viewAdPoIdByUserId != null && !viewAdPoIdByUserId.isEmpty()) {
-            for (Long id : viewAdPoIdByUserId) {
-                if (Objects.equals(id, adPoId))return;
-            }
+        long viewDeletedCount = userViewAdMapper.getViewDeletedAdPoCount(userId,adPoId);
+        if (viewDeletedCount == 1L){
+            userViewAdMapper.updateViewTimeAndDeleted(userId,adPoId);
+            return;
         }
+        long viewCount = userViewAdMapper.getViewAdPoCount(userId,adPoId);
+        if (viewCount==1L){
+            userViewAdMapper.updateViewTime(userId,adPoId);
+            return;
+        }
+
         UserViewAd userViewAd = new UserViewAd();
         userViewAd.setUserId(userId);
         userViewAd.setAdId(adPoId);
         userViewAdMapper.insert(userViewAd);
+    }
+    @Override
+    public void viewDecrement(Long userId, Long adPoId) {
+        userViewAdMapper.deleteView(userId,adPoId);
     }
 
     @Override
@@ -156,15 +163,41 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void favoriteIncrement(Long userId, Long adPoId) {
-        UserFavoritesAd userFavoritesAd = new UserFavoritesAd();
-        userFavoritesAd.setUserId(userId);
-        userFavoritesAd.setAdPoId(adPoId);
-        userFavoritesAdMapper.insert(userFavoritesAd);
+    public void favorite(Long userId, Long adPoId) {
+        Long favorCount = userFavoritesAdMapper.getFavorAdPoCount(userId,adPoId);
+        if (favorCount == 1L)userFavoritesAdMapper.deleteFavorByUserIdAndAdPoId(userId,adPoId);
+        else if (favorCount == 0){
+            Long favorDeletedCount = userFavoritesAdMapper.getFavorDeletedAdPoCount(userId,adPoId);
+            if (favorDeletedCount == 1L){
+                userFavoritesAdMapper.updateFavorDelete(userId,adPoId);
+            }else {
+                UserFavoritesAd userFavoritesAd = new UserFavoritesAd();
+                userFavoritesAd.setUserId(userId);
+                userFavoritesAd.setAdPoId(adPoId);
+                userFavoritesAd.setTime(new Date());
+                userFavoritesAdMapper.insert(userFavoritesAd);
+            }
+        }
     }
 
     @Override
-    public void favoriteDecrement(Long userId, Long adPoId) {
-        userFavoritesAdMapper.deleteFavorByUserIdAndAdPoId(userId,adPoId);
+    public boolean isFavorite(Long userId, Long adPoId) {
+        Long favorCount = userFavoritesAdMapper.getFavorAdPoCount(userId,adPoId);
+        return favorCount == 1L;
     }
+
+    @Override
+    public List<AdPoVo> findFavorites(String keyWord,Long userId) {
+        List<AdPo> adPoList = adPoService.getAdPoListByIds(userFavoritesAdMapper.getFavorAdPoIdByUserId(userId));
+        List<AdPo> result = adPoService.getAdPoInListByKeyWord(keyWord, adPoList);
+        return adPoService.adPoListToVoList(result);
+    }
+
+    @Override
+    public List<AdPoVo> findHistories(String keyWord, Long userId) {
+        List<AdPo> adPoList = adPoService.getAdPoListByIds(userViewAdMapper.getViewAdPoIdByUserId(userId));
+        List<AdPo> result = adPoService.getAdPoInListByKeyWord(keyWord, adPoList);
+        return adPoService.adPoListToVoList(result);
+    }
+
 }

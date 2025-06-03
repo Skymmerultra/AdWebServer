@@ -16,19 +16,30 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,item_type,item_id,url,create_time,update_time,is_deleted
+        id,name,item_type,item_id,url
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from graph_info
-        where  id = #{id} 
+        where id = #{id} and is_deleted = 0
     </select>
     <select id="getGraphListByTypeAndId" resultType="com.ad.web.entity.Graph">
         select <include refid="Base_Column_List" />
         from graph_info
         where item_type=#{itemType} and item_id=#{itemId} and is_deleted=0
+    </select>
+
+
+    <select id="getGraphListByTypeAndIds" resultType="com.ad.web.entity.Graph">
+        select <include refid="Base_Column_List"/>
+        from graph_info
+        where item_type = #{itemType}
+        and item_id in
+        <foreach collection="distinctIds" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

@@ -12,17 +12,17 @@ import java.util.List;
 */
 public interface UserViewAdMapper {
 
-    int deleteByPrimaryKey(Long id);
-
     int insert(UserViewAd record);
 
-    int insertSelective(UserViewAd record);
-
-    UserViewAd selectByPrimaryKey(Long id);
-
-    int updateByPrimaryKeySelective(UserViewAd record);
-
-    int updateByPrimaryKey(UserViewAd record);
-
     List<Long> getViewAdPoIdByUserId(Long userId);
+
+    int updateViewTime(Long userId, Long adPoId);
+
+    long getViewAdPoCount(Long userId, Long adPoId);
+
+    long getViewDeletedAdPoCount(Long userId, Long adPoId);
+
+    int updateViewTimeAndDeleted(Long userId, Long adPoId);
+
+    int deleteView(Long userId, Long adPoId);
 }

@@ -3,42 +3,28 @@ package com.ad.web.entity;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
- * 用户充值表
- * @TableName user_recharge
+ * 管理员信息表
+ * @TableName admin_info
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserRecharge {
+public class Admin {
     /**
-     * 
+     * 管理员id
      */
     private Long id;
 
     /**
-     * 用户id
+     * 密码
      */
-    private Long userId;
+    private String password;
 
     /**
-     * 充值时间
+     * 用户名
      */
-    private Date time;
-
-    /**
-     * 充值金额
-     */
-    private Integer rechargeNum;
-
-    /**
-     * 支付类型id
-     */
-    private Long paymentTypeId;
+    private String adminName;
 
     /**
      * 创建时间
@@ -69,12 +55,10 @@ public class UserRecharge {
         if (getClass() != that.getClass()) {
             return false;
         }
-        UserRecharge other = (UserRecharge) that;
+        Admin other = (Admin) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
-            && (this.getTime() == null ? other.getTime() == null : this.getTime().equals(other.getTime()))
-            && (this.getRechargeNum() == null ? other.getRechargeNum() == null : this.getRechargeNum().equals(other.getRechargeNum()))
-            && (this.getPaymentTypeId() == null ? other.getPaymentTypeId() == null : this.getPaymentTypeId().equals(other.getPaymentTypeId()))
+            && (this.getPassword() == null ? other.getPassword() == null : this.getPassword().equals(other.getPassword()))
+            && (this.getAdminName() == null ? other.getAdminName() == null : this.getAdminName().equals(other.getAdminName()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
             && (this.getIsDeleted() == null ? other.getIsDeleted() == null : this.getIsDeleted().equals(other.getIsDeleted()));
@@ -85,10 +69,8 @@ public class UserRecharge {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getUserId() == null) ? 0 : getUserId().hashCode());
-        result = prime * result + ((getTime() == null) ? 0 : getTime().hashCode());
-        result = prime * result + ((getRechargeNum() == null) ? 0 : getRechargeNum().hashCode());
-        result = prime * result + ((getPaymentTypeId() == null) ? 0 : getPaymentTypeId().hashCode());
+        result = prime * result + ((getPassword() == null) ? 0 : getPassword().hashCode());
+        result = prime * result + ((getAdminName() == null) ? 0 : getAdminName().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         result = prime * result + ((getIsDeleted() == null) ? 0 : getIsDeleted().hashCode());
@@ -102,10 +84,8 @@ public class UserRecharge {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", userId=").append(userId);
-        sb.append(", time=").append(time);
-        sb.append(", rechargeNum=").append(rechargeNum);
-        sb.append(", paymentTypeId=").append(paymentTypeId);
+        sb.append(", password=").append(password);
+        sb.append(", adminName=").append(adminName);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", isDeleted=").append(isDeleted);

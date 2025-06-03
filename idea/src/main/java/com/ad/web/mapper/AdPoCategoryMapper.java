@@ -1,5 +1,6 @@
 package com.ad.web.mapper;
 
+import com.ad.web.entity.AdPo;
 import com.ad.web.entity.AdPoCategory;
 
 import java.util.List;
@@ -24,5 +25,5 @@ public interface AdPoCategoryMapper {
 
     List<Long> getCategoryIdsByAdPoId(Long adPoId);
 
-    Long getAdPoIdsByCategoryId(Long categoryId);
+    List<Long> getAdPoIdsByCategoryId(Long categoryId);
 }

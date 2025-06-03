@@ -1,6 +1,5 @@
 package com.ad.web.mapper;
 
-import com.ad.web.common.Enum.GraphType;
 import com.ad.web.entity.Graph;
 
 import java.util.Date;
@@ -27,4 +26,6 @@ public interface GraphMapper {
     int updateByPrimaryKey(Graph record);
 
     List<Graph> getGraphListByTypeAndId(Integer itemType, Long itemId);
+
+    List<Graph> getGraphListByTypeAndIds(Integer itemType, List<Long> distinctIds);
 }

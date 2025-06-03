@@ -12,11 +12,13 @@ public interface AdPoService {
 
     List<AdPoVo> adPoListToVoList(List<AdPo> adPoList);
 
-    AdPo getAdPoById(Long id);
-
     List<AdPoVo> getAdPoListByKeyWord(String keyWord);
 
     AdPoVo getDetailById(Long adPoId);
 
     void ClickIncrement(Long adPoId);
+
+    List<AdPo> getAdPoListByIds(List<Long> ids);
+
+    List<AdPo> getAdPoInListByKeyWord(String keyWord,List<AdPo> adPoList);
 }

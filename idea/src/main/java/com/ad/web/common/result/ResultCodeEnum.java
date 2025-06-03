@@ -1,5 +1,6 @@
 package com.ad.web.common.result;
 
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.Getter;
 
 @Getter

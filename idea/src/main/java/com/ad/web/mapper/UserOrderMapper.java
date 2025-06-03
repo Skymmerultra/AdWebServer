@@ -12,12 +12,6 @@ import java.util.List;
 */
 public interface UserOrderMapper {
 
-    int deleteByPrimaryKey(Long id);
-
-    int insert(UserOrder record);
-
-    int insertSelective(UserOrder record);
-
     UserOrder selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(UserOrder record);
@@ -27,4 +21,6 @@ public interface UserOrderMapper {
     int orderInvoice(Long orderId);
 
     List<UserOrder> getOrderByUserId(Long userId);
+
+    int insertSelective(UserOrder order);
 }

@@ -1,6 +1,8 @@
 package com.ad.web.entity;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 /**
@@ -25,18 +27,25 @@ public class UserFavoritesAd {
     private Long adPoId;
 
     /**
+     * 收藏时间
+     */
+    private Date time;
+    /**
      * 创建时间
      */
+    @JsonIgnore
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @JsonIgnore
     private Date updateTime;
 
     /**
      * 是否删除
      */
+    @JsonIgnore
     private Integer isDeleted;
 
     @Override
@@ -54,6 +63,7 @@ public class UserFavoritesAd {
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
             && (this.getAdPoId() == null ? other.getAdPoId() == null : this.getAdPoId().equals(other.getAdPoId()))
+            && (this.getTime() == null ? other.getTime() == null : this.getTime().equals(other.getTime()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
             && (this.getIsDeleted() == null ? other.getIsDeleted() == null : this.getIsDeleted().equals(other.getIsDeleted()));
@@ -66,6 +76,7 @@ public class UserFavoritesAd {
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getUserId() == null) ? 0 : getUserId().hashCode());
         result = prime * result + ((getAdPoId() == null) ? 0 : getAdPoId().hashCode());
+        result = prime * result + ((getTime() == null) ? 0 : getTime().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         result = prime * result + ((getIsDeleted() == null) ? 0 : getIsDeleted().hashCode());
@@ -81,6 +92,7 @@ public class UserFavoritesAd {
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
         sb.append(", adPoId=").append(adPoId);
+        sb.append(", time=").append(time);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", isDeleted=").append(isDeleted);

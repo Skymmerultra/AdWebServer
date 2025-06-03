@@ -1,6 +1,7 @@
 package com.ad.web.mapper;
 
 import com.ad.web.entity.Category;
+import com.ad.web.entity.vo.category.CategoryRelation;
 
 import java.util.List;
 
@@ -25,4 +26,6 @@ public interface CategoryMapper {
     int updateByPrimaryKey(Category record);
 
     List<Long> getCategoriesIdKeyToName(String keyWord);
+
+    List<CategoryRelation> batchSelectByAdPoIds(List<Long> adPoIds);
 }
