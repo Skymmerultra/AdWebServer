@@ -8,10 +8,13 @@
   
       <!-- 右侧内容 -->
       <el-main class="main-content">
-        <div class="avatar-container" >
+        <div class="avatar-container"  @click="uploadAvatar">
             <el-avatar class="avatar-image"
                 src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
             />
+             <div class="upload-icon">
+             <i class="fa-solid fa-arrow-up-from-bracket"></i>
+             </div>
         </div>
         <div class="information-container">
             <el-descriptions
@@ -75,7 +78,7 @@
     </el-container>
   </div>
 
-    <el-dialog v-model="information_dialogVisable" @close="close_informationDialog" center>
+    <el-dialog v-model="information_dialogVisible" @close="close_informationDialog" center>
         <el-form :model="changeduserInfo" label-width="70px">
           <el-form-item label="用户名:">
             <el-input v-model="changeduserInfo.username" clearable/>
@@ -101,7 +104,7 @@
         </el-form>
       </el-dialog>
 
-    <el-dialog v-model="password_dialogVisable" @close="resetPassword" center>
+    <el-dialog v-model="password_dialogVisible" @close="resetPassword" center>
         <el-form :model="passwordForm" :rules="rules" ref="changePassword">
         <el-form-item label="请输入原密码" prop="oldPassword" label-position="top">
             <el-input v-model="passwordForm.oldPassword"></el-input>
@@ -117,14 +120,46 @@
         </el-form-item>
       </el-form>
       </el-dialog>
+
+      <el-dialog v-model="avatar_dialogVisible" center width="300px">
+        <div class="avatar-upload-container">
+          <p>请上传您的头像</p>
+          <el-upload 
+            class="avatar-uploader"
+            action="https://m1.apifoxmock.com/m1/6267385-5961501-default/user/changeavatar"
+            method="put"
+            :show-file-list="false"
+            :data="{userId: this.$store.getters.getUserId}"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <!-- 关键修改：添加全屏覆盖的透明按钮 -->
+            <div class="full-area-trigger"></div>
+            
+            <img v-if="avatarUrl" :src="avatarUrl" class="avatar" />
+            <div v-else class="upload-placeholder">
+              <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
+              <span>点击上传头像</span>
+            </div>
+          </el-upload>
+          
+          <div class="dialog-buttons">
+            <el-button @click="avatar_dialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="confirmAvatar">确定</el-button>
+          </div>
+        </div>
+      </el-dialog>
 </template>
   
   <script>
+  import { ElMessage } from 'element-plus';
+  import { Plus } from '@element-plus/icons-vue';
   import axios from 'axios';
   import UserSidebar from '@/components/UserSidebar.vue';
   export default {
     components:{
-      UserSidebar
+      UserSidebar,
+      Plus
     },
     data() {
       // const validOldpassword = (rule,value,callback) => {
@@ -146,8 +181,9 @@
         
       // }
       return {
-        information_dialogVisable:false,
-        password_dialogVisable:false,
+        information_dialogVisible:false,
+        password_dialogVisible:false,
+        avatar_dialogVisible:false,
         passwordForm:{
           oldPassword:"",
           newPassword:"",
@@ -162,6 +198,7 @@
           email:"",
         },
         userInfo:{},
+        avatarUrl:"",
 
         rules:{
           oldPassword:[
@@ -200,7 +237,8 @@
         axios.put(`https://m1.apifoxmock.com/m1/6267385-5961501-default/changeinformation`,this.changeduserInfo)
         .then( response => {
           if(response.data.code==200){
-            console.log("修改成功");
+            this.$message.success("修改成功")
+            this.information_dialogVisable = false
           }
         })
       },
@@ -253,7 +291,23 @@
           this.$message.error("表单输入有误")
        }
     },
-  },
+    uploadAvatar(){
+      this.avatar_dialogVisible = true
+    },
+    handleAvatarSuccess(response) {
+      this.avatarUrl = response.data;
+    },
+    beforeAvatarUpload(rawFile) {
+      if (rawFile.type !== 'image/jpeg') {
+        ElMessage.error('Avatar picture must be JPG format!');
+        return false;
+      } else if (rawFile.size / 1024 / 1024 > 4) {
+        ElMessage.error('Avatar picture size can not exceed 4MB!');
+        return false;
+      }
+      return true;
+    }
+    },
     created(){
       axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/${this.$store.getters.getUserId}")
       .then(response => {
@@ -292,11 +346,105 @@
     gap:20px/*调整上下间距*/
 }
 
-.avatar-image {
-  width: 150px; /* 调整头像的尺寸 */
-  height: 150px;
-  border-radius: 50%; /* 保证头像圆形 */
+.avatar-container {
+  position: relative;
+  display: inline-block; /* 确保容器根据内容自适应 */
+  overflow: hidden; /* 防止图标溢出 */
+  border-radius: 50%; /* 保持和头像相同的圆形 */
 }
+
+/* 头像基础样式 */
+.el-avatar {
+  width:150px;
+  height: 150px;
+  display: block;
+  transition: all 0.3s ease; /* 可选：添加头像的悬停效果 */
+}
+
+/* 上传图标容器 */
+.upload-icon {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+  color: white;
+  padding: 8px 0;
+  transform: translateY(100%); /* 初始隐藏在下方 */
+  opacity: 0;
+  transition: all 0.3s ease;
+  border-radius: 0 0 50% 50%; /* 底部圆角匹配头像 */
+}
+
+/* 悬停时显示上传图标 */
+.avatar-container:hover .upload-icon {
+  transform: translateY(0); /* 上浮显示 */
+  opacity: 1;
+}
+
+ /*上传头像弹窗*/
+.avatar-upload-container {
+  position: relative;
+  text-align: center;
+  padding: 20px;
+}
+
+.avatar-uploader {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 20px;
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+}
+
+.avatar-uploader:hover{
+  border-color: aqua;
+}
+
+.full-area-trigger {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #8c939d;
+}
+
+.avatar-uploader-icon {
+  font-size: 28px;
+}
+
+.dialog-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+
+
 
 .descriptions{
     width:800px;

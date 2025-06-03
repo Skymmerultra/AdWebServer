@@ -24,10 +24,13 @@ import axios from 'axios';
                 }
                 else{
                     this.isFavorite=!this.isFavorite
-                    axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/favorite",
+                    axios.post("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/favorite",
                         {
                             userId:this.$store.getters.getUserId,
                             adPoId:this.adPoId
+                        },
+                        {
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                         }
                     )
                 }
@@ -36,10 +39,13 @@ import axios from 'axios';
         },
         created(){
             if(this.$store.getters.isLoggedIn){
-                axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/isFavorite",
+                axios.post("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/isFavorite",
                     {
                         userId:this.$store.getters.getUserId,
                         adPoId:this.adPoId
+                    },
+                     {
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                     }
                 ).then(response => {
                     this.isFavorite=response.data.data;

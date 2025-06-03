@@ -47,8 +47,11 @@ export default {
       axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/adpo/ClickIncrement/${this.adId}")
       axios.post("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/viewIncrement",
         {
-          userId:this.$store.getters.getUserID,
+          userId:this.$store.getters.getUserId,
           adPoId:this.adId
+        },
+        {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }
       )
       this.$router.push({ name:'addetail', params: { adId: this.adId } }) ;

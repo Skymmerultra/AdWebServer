@@ -22,7 +22,7 @@
                    {{ adInfo?.startTime }} - {{ adInfo?.endTime }}
                 </el-descriptions-item>
                  <el-descriptions-item label=" 是否开具发票">
-                    {{ adInfo?.isInvoice }} <el-button v-if="isInvoice">补开发票</el-button>
+                    {{ adInfo?.isInvoice }} <el-button v-if="couldReInvoice" @click="openRemedyInvoice" class="button2">补开发票</el-button>
                 </el-descriptions-item>
                 <el-descriptions-item label="总投递次数">
                    {{ adInfo?.deliveryNum }}
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { ElMessage, ElMessageBox } from 'element-plus'
 import DetailDia from "@/components/DetailDia"
 export default{
         components:{
@@ -56,13 +57,14 @@ export default{
         data(){
             return {
                  DetailDiaVis:false,
+                 order_id:this.adInfo?.id,
                  adPoId:this.adInfo?.adPoId,
                  deliveryCaseId:this.adInfo?.deliveryCaseId
             }
         },
         computed:{
-            isInvoice(){
-                if(this.adInfo.isInvoice == "否")
+            couldReInvoice(){
+                if(this.adInfo?.isInvoice == "否")
                 return true;
                 else
                 return false;
@@ -72,9 +74,57 @@ export default{
             openDetailDia(){
             this.DetailDiaVis = true;
             },
+            openCancelOrderDia(){
+                if(this.adInfo?.cycle!="inspection"){
+                   return 
+                }
+                else{
+                     ElMessageBox.confirm(
+                        '该订单正在审核,您确定取消订单吗',
+                        'Warning',
+                        {
+                        confirmButtonText: 'OK',
+                        cancelButtonText: 'Cancel',
+                        type: 'warning',
+                        }
+                        )
+                        .then(() => {
+                        ElMessage({
+                            type: 'success',
+                            message: '订单取消成功',
+                        })
+                        this.$emit('updateOrderData',this.order_id)
+                        })
+                        .catch(() => {
+                        })
+                }
+            },
             openReBuyVue(){
 
                 this.$router.push({name:'addetail',params:{adId:this.adPoId}})
+            },
+            openRemedyInvoice(){
+                if(this.adInfo?.cycle == "inspection"){
+                      ElMessageBox.confirm(
+                        '您确定要为该订单补开发票吗',
+                        {
+                        confirmButtonText: 'OK',
+                        cancelButtonText: 'Cancel',
+                        type: 'info',
+                        }
+                        )
+                        .then(() => {
+                            this.$emit('updateOrderInvoice',this.order_id)
+                        })
+                        .catch(() => {
+                        })
+                }
+                else{
+                    ElMessage({
+                        type:'warning',
+                        message:'已投递的广告不支持补开发票'
+                    })
+                }
             }
         },
         mounted(){
@@ -123,8 +173,26 @@ export default{
 
 .button:hover{
     color: rgb(255, 255, 255);  /* 悬停时文字颜色变为白色 */
-    background-color: rgb(121, 191, 193);  /* 悬停时背景色变为紫色 */
-    border-color: rgb(79, 105, 174);  /* 悬停时边框颜色变为紫色 */
+    background-color: rgb(121, 191, 193);  /* 悬停时背景色*/
+    border-color: rgb(79, 105, 174);  /* 悬停时边框颜色*/
+}
+
+.button2, .button2:focus:not(.button2:hover){ 
+    margin-right: 12px;
+    border: 1px solid #2794f8;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px 0 #f4f4f4;
+    color: #2794f8;
+    background: white;
+}
+.button2:focus, .button2:hover{
+    background: #eaf5ff;
+    border: 1px solid #2794f8 !important;
+    color: #2794f8;
+}
+.button2:active {
+    background: #2794f8;
+    color: white;
 }
 </style>
 

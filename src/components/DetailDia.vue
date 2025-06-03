@@ -1,11 +1,12 @@
 <template>
   <div>
-    <el-dialog v-model="localDialogVisible" width="700px">
+    <el-dialog v-model="localDialogVisible" width="750px">
         <div v-if="this.id==0">审核中,请耐心等待</div>
         <div v-if="this.id!=0"> 
            <el-table
            :data="deliveryCase"
             show-summary>
+            <el-table-column prop="ordinal" label="序号" width="100px"/>
             <el-table-column prop="time" label="投递时间"  width="250px"/>
             <el-table-column prop="viewNum" label="观看流量" width="150px"/>
             <el-table-column prop="clickNum" label="点击次数" width="150px"/>
@@ -44,7 +45,7 @@ export default {
   mounted(){
     this.fetchDeliveryData()
   },
-  emits: ['update:dialogVisible'], // 声明要触发的事件
+  emits: ['update:dialogVisible'],
   computed: {
     localDialogVisible: {
       get() {

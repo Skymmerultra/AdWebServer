@@ -88,7 +88,7 @@ export default {
       this.registerForm.checkPassWord='';
     },
     login(){
-      axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/login",this.loginForm)
+      axios.post("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/login",this.loginForm)
       .then(response => {
         if(response.data.code === "200"){
           //传入用户id
@@ -107,10 +107,15 @@ export default {
         this.$message.error("两次密码输入不一致，请重新输入");
       }
       else{
-      axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/register",
+      axios.post("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/register",
         {
-          username:this.username,
-          password:this.password
+          username:this.registerForm.username,
+          password:this.resetRegisterForm.password
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json' 
+          }
         }
       )
       .then(response => {

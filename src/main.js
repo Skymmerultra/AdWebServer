@@ -16,7 +16,6 @@ app.config.globalProperties.$axios = axios;
 //     isLoggedIn: false,
 //   });
 // app.provide('globalState', globalState);
-
 app.use(store)
 app.use(ElementPlus)
 app.use(router)

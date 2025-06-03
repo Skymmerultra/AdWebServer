@@ -5,7 +5,9 @@
                                                   @search="search"
                                                   @reload="reload"/></el-header>
         <el-container class="header-under">
-            <el-aside class="aside"><CategoryMenu/></el-aside>
+            <el-aside class="aside"><CategoryMenu
+                                      :activeIndex="cateActiveIndex"
+                                      @categoryNavigation="handleCategorySelect"/></el-aside>
             <el-main class="main">
                 <div class="card-grid" >
                     <AdCard   v-for="(adInfo, index) in adInfos" 
@@ -33,6 +35,7 @@
         data(){
           return{
             adInfos:[],
+            cateActiveIndex:''
           }
         },
         mounted() {
@@ -55,7 +58,18 @@
             })
           },
           reload(){
+             this.cateActiveIndex = '';
              this.fetchClickNumMaxData()
+          },
+          fetchCategoryData(index){
+            axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/homeview/catenavi?category=${index}`)
+            .then(response => {
+              this.adInfos = response.data.data
+            })
+          },
+          handleCategorySelect(index){
+              this.cateActiveIndex = index
+              this.fetchCategoryData(index)
           }
         }
     }

@@ -22,7 +22,9 @@
                   
                         <adShowCard v-for="(adInfo, index) in adInfos" 
                               :key="index"
-                              :adInfo="adInfo"></adShowCard>
+                              :adInfo="adInfo"
+                              @updateOrderData="onUpdateOrderData"
+                              @updateOrderInvoice="onupdateOrderInvoice"></adShowCard>
           
                 </div>
             </el-main>
@@ -55,15 +57,21 @@ export default{
             }, 1000),
       
             fetchBackData: throttle(function() {
-              // 这里是 fetchBackData 的具体逻辑
+               axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/adhouse/cycle/${this.id}?cycle=end`)
+               .then(response => {
+                this.adInfos = response.data.data;
+               })
             }, 1000),
       
             fetchMidData: throttle(function() {
-              // 这里是 fetchMidData 的具体逻辑
+                axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/adhouse/cycle/${this.id}?cycle=delivery`)
+                .then(response => {
+                  this.adInfos = response.data.data;
+                })
             }, 1000),
       
             fetchFrontData: throttle(function() {
-              axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/adhouse/front/${this.id}`)
+              axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/adhouse/cycle/${this.id}?cycle=inspection`)
               .then(response => {
               this.adInfos = response.data.data;})
             }, 1000),
@@ -108,6 +116,45 @@ export default{
                 this.active_index = "1"
             }
         },
+        deleteOrder(order_id){
+          axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/order/delete/${order_id}`)
+          .then(response => {
+            if(response.data.code === 200){
+              this.$message.success("订单删除成功")
+            }
+            else{
+              this.$message.error("出错啦，请稍后试试")
+            }
+          })
+        },
+        onUpdateOrderData(order_id){
+          this.deleteOrder(order_id)
+          if(this.active_index == '1'){
+            this.fetchFrontData()
+          }
+          else if(this.active_index =='2'){
+            this.fetchFrontData()
+          }
+          else if(this.active_index =='3'){
+            this.fetchBackData()
+          }
+          else if(this.active_index == '4'){
+            this.fetchAllData()
+          }
+        },
+        onupdateOrderInvoice(order_id){
+          axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/order/invoice/${order_id}`)
+          .then(response => {
+            if(response.data.code === 200){
+              this.$message.success("提交成功，等待管理员审核")
+            }
+            else{
+              this.$message.error("出错啦,请稍后试试")
+            }
+          }
+            
+          )
+        }
     },
     mounted(){
         this.fetchAllData();
