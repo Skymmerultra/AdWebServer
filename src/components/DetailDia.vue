@@ -6,7 +6,7 @@
            <el-table
            :data="deliveryCase"
             show-summary>
-            <el-table-column prop="ordinal" label="序号" width="100px"/>
+            <el-table-column type="index"  label="序号" width="100px"/>
             <el-table-column prop="time" label="投递时间"  width="250px"/>
             <el-table-column prop="viewNum" label="观看流量" width="150px"/>
             <el-table-column prop="clickNum" label="点击次数" width="150px"/>

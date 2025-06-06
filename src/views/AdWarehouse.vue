@@ -11,9 +11,10 @@
                 :default-active="active_index"
                 @select="handleSelect"
                 defau>
-                <el-menu-item index="4">全部广告</el-menu-item>
-                <el-menu-item index="3">投递结束</el-menu-item>
-                <el-menu-item index="2">正在投递</el-menu-item>
+                <el-menu-item index="5">全部广告</el-menu-item>
+                <el-menu-item index="4">投递结束</el-menu-item>
+                <el-menu-item index="3">正在投递</el-menu-item>
+                <el-menu-item index="2">审核失败</el-menu-item>
                 <el-menu-item index="1">正在审核</el-menu-item>
                 </el-menu>
             </el-aside>
@@ -48,7 +49,7 @@ export default{
         return {
             id:this.$store.getters.getUserId,
             adInfos:[],
-            active_index:"4",
+            active_index:"5",
 
             fetchAllData: throttle(function() {
                 axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/adhouse/${this.id}`)
@@ -75,6 +76,13 @@ export default{
               .then(response => {
               this.adInfos = response.data.data;})
             }, 1000),
+
+            fetchFailData: throttle(function(){
+              axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/adhouse/cycle/${this.id}?cycle=fail`)
+              .then(response => {
+                this.adInfos = response.data.data
+              })
+            },1000),
         }
     },
     methods:{
@@ -99,19 +107,23 @@ export default{
             if (this.active_index === index) {
                 return;  // 点击无反应
             }
-            if(index == "4"){
+            if(index == "5"){
                 this.fetchAllData()
+                this.active_index = "5"
+            }
+            else if(index == "4"){
+                this.fetchBackData()
                 this.active_index = "4"
             }
-            else if(index == "3"){
-                this.fetchBackData()
+            else if(index == '3'){
+                this.fetchMidData()
                 this.active_index = "3"
             }
             else if(index == '2'){
-                this.fetchMidData()
+                this.fetchFailData()
                 this.active_index = "2"
             }
-            else if(index == '1'){
+            else if(index == "1"){
                 this.fetchFrontData()
                 this.active_index = "1"
             }

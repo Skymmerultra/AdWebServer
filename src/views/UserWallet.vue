@@ -13,11 +13,21 @@
             <text class="balance-text">￥{{ balance }}</text>
             </div>
         </div>
+        <div class="buttonGrid">
         <div class="order">
-          <el-button @click="open_orderRecord_dialog">订单记录</el-button>
+          <el-button class="buttonDiv" @click="open_orderRecord_dialog"
+                    :icon="Tickets">订单记录</el-button>
         </div>
         <div class="recharge">
-          <el-button>钱包充值</el-button>
+          <el-button class="buttonDiv" @click="open_recharge_dialog"
+                    :icon="Wallet">钱包充值</el-button>
+        </div>
+        <div class="shoppingCart">
+          <el-button class="buttonDiv" :icon="ShoppingCart">购物车</el-button>
+        </div>
+        <div class="stream">
+          <el-button class="buttonDiv" :icon="Money">流水查询</el-button>
+        </div>
         </div>
       </el-main>
 
@@ -43,24 +53,42 @@
         @current-change="handlePageChange"
         layout="prev, pager, next" />
       </el-dialog>
+
+      <el-dialog v-model="recharge_dialog" center>
+      <el-form>
+        <el-input type="number" v-model="rechargeNum" placeholder="请输入金额" style="width: 150px;"></el-input>
+        <el-button @click="Recharge">确认</el-button>
+      </el-form>
+      </el-dialog>
     </el-container>
 </template>
   
   <script>
+  import { Money,Wallet,ShoppingCart,Tickets} from '@element-plus/icons-vue'
   import axios from 'axios';
   import UserSidebar from '@/components/UserSidebar.vue';
   export default {
     components:{
-      UserSidebar
+      UserSidebar,
+     
     },
     data() {
       return {
+        Tickets:Tickets,
+        Money:Money,
+        Wallet:Wallet,
+        ShoppingCart:ShoppingCart,
         balance:null,
         userId:this.$store.getters.getUserId,
         orderRecord_dialog:false,
+        recharge_dialog:false,
         orderArray:[],
         currentPage:1,
         pageSize:5,
+        rechargeNum:{
+          type:Number,
+          default:0
+        }
       };
     },
     computed:{
@@ -72,9 +100,26 @@
     }
     },
     methods:{
+      Recharge(){
+        const params = new URLSearchParams();
+        params.append("id",this.$store.getters.getUserId)
+        params.append("rechargeNum",this.rechargeNum)
+        axios.post("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/recharge",params)
+        .then(
+          response => {
+            if(response.data.code == 200){
+              this.$message.success("充值成功")
+            }
+          }
+        )
+        this.fetchBalance()
+      },
       open_orderRecord_dialog(event){
         this.orderRecord_dialog = true;
         event.target.blur();
+      },
+      open_recharge_dialog(){
+        this.recharge_dialog = true;
       },
       close_orderRecord_dialog(){
         this.orderRecord_dialog = false;
@@ -148,5 +193,39 @@
 .orderId:hover{
   text-decoration: underline;
 }
+
+#icon{
+  font-size: 30px;
+}
+
+/*鼠标点击后移开，恢复本身样式*/
+.buttonDiv, .buttonDiv:focus:not(.buttonDiv:hover){ 
+    width:150px;
+    padding: 10px 20px;
+    border: 1px solid #2794f8;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px 0 #f4f4f4;
+    color: #2794f8;
+    background: white;
+}
+/*鼠标悬浮，没有按下；鼠标按下后抬起，没有移开*/
+.buttonDiv:focus, .buttonDiv:hover{
+    background: #eaf5ff;
+    border: 1px solid #2794f8 !important;
+    color: #2794f8;
+}
+/*鼠标按下，没有抬起*/
+.buttonDiv:active {
+    background: #2794f8;
+    color: white;
+}
+
+.buttonGrid{
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+   gap: 50px 200px;
+}
+
+
 </style>
   

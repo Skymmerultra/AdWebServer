@@ -226,7 +226,7 @@
       // event.target.blur();
       // },
       open_changeInformation(){
-          this.information_dialogVisable=true;
+          this.information_dialogVisible=true;
           this.changeduserInfo.username=this.userInfo.username;
           this.changeduserInfo.sex=this.userInfo.sex;
           this.changeduserInfo.phone=this.userInfo.phone;
@@ -243,7 +243,7 @@
         })
       },
       open_changePassword(){
-        this.password_dialogVisable=true;
+        this.password_dialogVisible=true;
       },
       validcheckPassword(rule,value,callback) {
         if(value !== this.passwordForm.newPassword){

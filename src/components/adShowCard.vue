@@ -39,7 +39,7 @@
             </div>
         </div>
     </div>
-     <DetailDia v-model:dialogVisible="DetailDiaVis" :id="this.deliveryCaseId"></DetailDia>
+     <DetailDia v-model:dialogVisible="DetailDiaVis" :id="this.order_id"></DetailDia>
 </template>
 
 <script>
@@ -59,7 +59,6 @@ export default{
                  DetailDiaVis:false,
                  order_id:this.adInfo?.id,
                  adPoId:this.adInfo?.adPoId,
-                 deliveryCaseId:this.adInfo?.deliveryCaseId
             }
         },
         computed:{
@@ -76,6 +75,7 @@ export default{
             },
             openCancelOrderDia(){
                 if(this.adInfo?.cycle!="inspection"){
+                    ElMessage.warning("该订单已经审核结束,无法取消")
                    return 
                 }
                 else{
