@@ -43,7 +43,7 @@
         },
         methods:{
           fetchClickNumMaxData(){
-            axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/homeview")
+            axios.get("/back/adpo/getSomeAdPo")
             .then(response => {
             this.adInfos = response.data.data
             })
@@ -52,7 +52,7 @@
             });
           },
           search(query){
-            axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/homeview/adPo?keyWord=${query}`)
+            axios.get(`/back/adpo/getAdPoListByKeyWord?keyWord=${query}`)
             .then(response => {
               this.adInfos = response.data.data
             })
@@ -62,7 +62,7 @@
              this.fetchClickNumMaxData()
           },
           fetchCategoryData(index){
-            axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/homeview/catenavi?category=${index}`)
+            axios.get(`/back/adpo/catenavi?category=${index}`)
             .then(response => {
               this.adInfos = response.data.data
             })

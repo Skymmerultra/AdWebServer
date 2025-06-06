@@ -24,7 +24,7 @@ import axios from 'axios';
                 }
                 else{
                     this.isFavorite=!this.isFavorite
-                    axios.post("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/favorite",
+                    axios.post("/back/user/favorite",
                         {
                             userId:this.$store.getters.getUserId,
                             adPoId:this.adPoId
@@ -39,7 +39,7 @@ import axios from 'axios';
         },
         created(){
             if(this.$store.getters.isLoggedIn){
-                axios.post("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/isFavorite",
+                axios.post("/back/user/isFavorite",
                     {
                         userId:this.$store.getters.getUserId,
                         adPoId:this.adPoId

@@ -41,14 +41,14 @@
     methods:{
       search(query){
         const userId = this.$store.getters.getUserId;
-        axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/user/findHistories?keyWord=${query}&userId=${userId}`)
+        axios.get(`/back/user/findHistories?keyWord=${query}&userId=${userId}`)
         .then(response => {
           this.adInfos=response.data.data
         })
       }
     },
     mounted(){
-      axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/history/${this.$store.getters.getUserId}")
+      axios.get(`/back/user/history/${this.$store.getters.getUserId}`)
       .then(response => {
         this.adInfos=response.data.data;
         // console.log(this.adInfos);

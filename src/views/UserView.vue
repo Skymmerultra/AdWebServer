@@ -126,7 +126,7 @@
           <p>请上传您的头像</p>
           <el-upload 
             class="avatar-uploader"
-            action="https://m1.apifoxmock.com/m1/6267385-5961501-default/user/changeavatar"
+            action="/back/user/changeavatar"
             method="put"
             :show-file-list="false"
             :data="{userId: this.$store.getters.getUserId}"
@@ -233,14 +233,15 @@
           this.changeduserInfo.address=this.userInfo.address;
           this.changeduserInfo.email=this.userInfo.email;
       },
-      changeInformation_confirm(){
-        axios.put(`https://m1.apifoxmock.com/m1/6267385-5961501-default/changeinformation`,this.changeduserInfo)
+      async changeInformation_confirm(){
+        await axios.put(`/back/user/changeInformation`,this.changeduserInfo)
         .then( response => {
           if(response.data.code==200){
             this.$message.success("修改成功")
             this.information_dialogVisable = false
           }
         })
+        this.fetchUserinfo()
       },
       open_changePassword(){
         this.password_dialogVisible=true;
@@ -278,12 +279,14 @@
         // for (const [key, value] of Object.entries(submitForm)) {
         // console.log(`${key}:`, value);
         // }
-        const response = await this.$axios.put("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/changepassword",submitForm)
-        if(response.data.code === "200"){
+        const response = await this.$axios.put("/back/user/changepassword",submitForm,{
+          headers: {'content-Type':'application/x-www-form-urlencoded'}
+        })
+        if(response.data.code == "200"){
           this.$message.success('密码修改成功')
           this.password_dialogVisible = false
         }
-        else if(response.data.code === "404"){
+        else if(response.data.code == "404"){
           this.$message.warning('密码修改失败,请检查原密码是否正确')
         }
         }catch (error) {
@@ -306,14 +309,17 @@
         return false;
       }
       return true;
-    }
     },
-    created(){
-      axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/${this.$store.getters.getUserId}")
+    fetchUserinfo(){
+      axios.get(`/back/user/${this.$store.getters.getUserId}`)
       .then(response => {
         this.userInfo=response.data.data;
         // alert("用户id为"+this.$store.getters.getUserId)
       })
+    }
+    },
+    created(){
+      this.fetchUserinfo()
     }
   }
   </script>

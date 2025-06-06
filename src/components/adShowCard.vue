@@ -3,7 +3,7 @@
         <div>
             <div class=image_container>
             <el-image 
-            :src="adInfo?.image_src"
+            :src="adInfo?.content"
             :fit="cover"
            >
             </el-image>
@@ -13,7 +13,7 @@
             <el-descriptions
             column="2">
                 <el-descriptions-item label="投递平台">
-                    {{adInfo?.platform }}
+                    {{adInfo?.platForm }}
                 </el-descriptions-item>
                 <el-descriptions-item label="状态">
                     {{ adInfo?.cycle }}
@@ -63,7 +63,7 @@ export default{
         },
         computed:{
             couldReInvoice(){
-                if(this.adInfo?.isInvoice == "否")
+                if(this.adInfo?.isInvoice == "0")
                 return true;
                 else
                 return false;
@@ -101,10 +101,10 @@ export default{
             },
             openReBuyVue(){
 
-                this.$router.push({name:'addetail',params:{adId:this.adPoId}})
+                this.$router.push({name:'addetail',params:{adPoId:this.adPoId}})
             },
             openRemedyInvoice(){
-                if(this.adInfo?.cycle == "inspection"){
+                if(this.adInfo?.cycle == "0"){
                       ElMessageBox.confirm(
                         '您确定要为该订单补开发票吗',
                         {

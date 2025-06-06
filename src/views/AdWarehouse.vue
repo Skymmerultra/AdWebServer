@@ -52,33 +52,33 @@ export default{
             active_index:"5",
 
             fetchAllData: throttle(function() {
-                axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/adhouse/${this.id}`)
+                axios.get(`/back/adhouse/${this.id}`)
                 .then(response => {
                 this.adInfos = response.data.data;})  
             }, 1000),
       
             fetchBackData: throttle(function() {
-               axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/adhouse/cycle/${this.id}?cycle=end`)
+               axios.get(`/back/adhouse/cycle/${this.id}?cycle=end`)
                .then(response => {
                 this.adInfos = response.data.data;
                })
             }, 1000),
       
             fetchMidData: throttle(function() {
-                axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/adhouse/cycle/${this.id}?cycle=delivery`)
+                axios.get(`/back/adhouse/cycle/${this.id}?cycle=delivery`)
                 .then(response => {
                   this.adInfos = response.data.data;
                 })
             }, 1000),
       
             fetchFrontData: throttle(function() {
-              axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/adhouse/cycle/${this.id}?cycle=inspection`)
+              axios.get(`/back/adhouse/cycle/${this.id}?cycle=inspection`)
               .then(response => {
               this.adInfos = response.data.data;})
             }, 1000),
 
             fetchFailData: throttle(function(){
-              axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/adhouse/cycle/${this.id}?cycle=fail`)
+              axios.get(`/back/adhouse/cycle/${this.id}?cycle=fail`)
               .then(response => {
                 this.adInfos = response.data.data
               })
@@ -129,7 +129,7 @@ export default{
             }
         },
         deleteOrder(order_id){
-          axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/order/delete/${order_id}`)
+          axios.get(`/back/order/delete/${order_id}`)
           .then(response => {
             if(response.data.code === 200){
               this.$message.success("订单删除成功")

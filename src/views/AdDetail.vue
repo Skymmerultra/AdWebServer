@@ -16,7 +16,7 @@
       <div class="title">
       <h1 >{{ adInfo?.information?.name }} <span>
         <CollectIcon
-          :adPoId=this.adId
+          :adPoId=this.adPoId
           />
       </span></h1>
       </div>
@@ -150,7 +150,7 @@ export default {
     return {
       adInfo: {},
       dialogVisible:false,
-      adId:null,
+      adPoId:null,
       payType:null,
       diliveryNum: 1,
       isInvoice: false,
@@ -166,8 +166,8 @@ export default {
     };
   },
   created() {
-    this.adId = this.$route.params.adId;
-    // console.log("adcard传递的广告id为",this.adId);
+    this.adPoId = this.$route.params.adPoId;
+    console.log("adcard传递的广告id为",this.adPoId);
   },
   methods:{
     purchase() {
@@ -227,7 +227,7 @@ export default {
       }
       const formData = new FormData();
       formData.append('file', this.file);
-      formData.append('adPoId', this.adId);
+      formData.append('adPoId', this.adPoId);
       formData.append('userId', this.$store.getters.getUserId)
       formData.append('deliveryNum', this.diliveryNum);
       formData.append('startTime', this.dateRange[0].toISOString());
@@ -265,10 +265,10 @@ export default {
     // }
   },
   mounted() {
-  axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/adpo/15")
+  axios.get(`/back/adpo/${this.adPoId}`)
     .then(response => {
       this.adInfo = response.data.data;
-      // alert("广告id为:"+this.adId);
+      // alert("广告id为:"+this.adPoId);
     })
     .catch(error => {
       console.error("There was an error fetching data:", error);

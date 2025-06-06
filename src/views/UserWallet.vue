@@ -100,11 +100,11 @@
     }
     },
     methods:{
-      Recharge(){
+      async Recharge(){
         const params = new URLSearchParams();
         params.append("id",this.$store.getters.getUserId)
         params.append("rechargeNum",this.rechargeNum)
-        axios.post("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/recharge",params)
+        await axios.post("/back/user/recharge",params)
         .then(
           response => {
             if(response.data.code == 200){
@@ -112,6 +112,8 @@
             }
           }
         )
+        this.recharge_dialog=false
+
         this.fetchBalance()
       },
       open_orderRecord_dialog(event){
@@ -125,13 +127,13 @@
         this.orderRecord_dialog = false;
       },
       fetchBalance(){
-        axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/balance/${this.userId}")
+        axios.get(`/back/user/balance/${this.userId}`)
         .then(response => {
         this.balance=response.data.data;
       })
       },
       fetchOrder(){
-        axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/order/1")
+        axios.get(`/back/user/order/${this.userId}`)
         .then(response => {
           this.orderArray=response.data.data;
         })
@@ -140,7 +142,7 @@
         this.currentPage=page;
       },
       goToAdPage(adPoId){
-        this.$router.push({ name: 'addetail', params: { adId: adPoId } });
+        this.$router.push({ name: 'addetail', params: { adPoId: adPoId } });
       }
     },
     created(){

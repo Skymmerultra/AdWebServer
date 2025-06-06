@@ -32,7 +32,7 @@ export default {
   },
   data(){
     return{
-      adId:null
+      adPoId:null
     }
   },
   props: {
@@ -44,22 +44,22 @@ export default {
   methods: {
     handleCardClick() {
       //根据广告id增加广告点击量,同时记录用户浏览行为
-      axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/adpo/ClickIncrement/${this.adId}")
-      axios.post("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/viewIncrement",
+      axios.get(`/back/adpo/ClickIncrement/${this.adPoId}`)
+      axios.post("/back/user/viewIncrement",
         {
           userId:this.$store.getters.getUserId,
-          adPoId:this.adId
+          adPoId:this.adPoId
         },
         {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }
       )
-      this.$router.push({ name:'addetail', params: { adId: this.adId } }) ;
+      this.$router.push({ name:'addetail', params: { adPoId: this.adPoId } }) ;
     },
   },
   created(){
-    this.adId=this.adInfo?.information?.id;
-    // console.log("广告位id为:",this.adId);
+    this.adPoId=this.adInfo?.information?.id;
+    // console.log("广告位id为:",this.adPoId);
   }
 }
 </script>

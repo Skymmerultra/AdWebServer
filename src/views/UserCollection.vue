@@ -40,14 +40,14 @@
     },
     methods:{
       search(query){
-        axios.get(`https://m1.apifoxmock.com/m1/6267385-5961501-default/collection/adPo?keyWord=${query}`)
+        axios.get(`/back/user/findFavorites?keyWord=${query}&userId=${this.$store.getters.getUserId}`)
         .then(response => {
           this.adInfos=response.data.data
         })
       }
     },
     created(){
-      axios.get("https://m1.apifoxmock.com/m1/6267385-5961501-default/user/favorites/1")
+      axios.get(`/back/user/favorites/${this.$store.getters.getUserId}`)
       .then(response => {
         this.adInfos=response.data.data;
         // console.log(this.adInfos);

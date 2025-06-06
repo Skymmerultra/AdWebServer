@@ -30,7 +30,7 @@ const routes = [
     component:() => import('../views/UserViewHistory.vue')
   },
   {
-    path:'/addetail/:adId',
+    path:'/addetail/:adPoId',
     name:'addetail',
     component:() => import('../views/AdDetail.vue')
   },
